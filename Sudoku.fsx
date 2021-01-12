@@ -1,14 +1,14 @@
 let boardConvert idx =
     match idx with 
-    | 1 -> 1,1
-    | 2 -> 1,2
-    | 3 -> 1,3
-    | 4 -> 2,1
-    | 5 -> 2,2
-    | 6 -> 2,3
-    | 7 -> 3,1
-    | 8 -> 3,2
-    | 9 -> 3,3
+    | 1 -> 0,0
+    | 2 -> 0,1
+    | 3 -> 0,2
+    | 4 -> 1,0
+    | 5 -> 1,1
+    | 6 -> 1,2
+    | 7 -> 2,0
+    | 8 -> 2,1
+    | 9 -> 2,2
     | _ -> failwith "boardCovert takes 1-9"
 
 type Cell =
@@ -28,18 +28,20 @@ type Postiion = Top | Middle | Bottom
 type Row = Cell [] 
 type Column = Cell []
 type Diagonal = Cell []
+
 type Grid = Row [] 
 module Grid =
     let GetColumn i (g:Grid): Column  =
-        [| g.[0].[i-1]
-           g.[1].[i-1]
-           g.[2].[i-1] |]
+        [| g.[0].[i]
+           g.[1].[i]
+           g.[2].[i] |]
 
     let ToGrid g  =
         g
         |> Array.map(
-            Array.map(fun v ->
-                if v = 0 then Empty else Value v))
+            Array.map( fun v ->
+                if v = 0 then Empty 
+                else Value v))
     
     let Correct (g:Grid) =
         g
@@ -51,13 +53,18 @@ module Board  =
     let GetColumn col (board:Board)  =
         let boardCol, gridCol = boardConvert col
         board
-        |> Array.collect(fun r -> Grid.GetColumn gridCol r.[boardCol-1])
+        |> Array.collect(fun r -> Grid.GetColumn gridCol r.[boardCol])
 
     let GetRow row (board:Board) : Row =
         let boardRow, gridRow = boardConvert row
-        board.[boardRow-1]
-        |> Array.collect(fun r -> r.[gridRow-1])
+        board.[boardRow]
+        |> Array.collect(fun r -> r.[gridRow])
         
+    let GetCell row column (board:Board) =
+        let boardRow, gridRow = boardConvert row
+        let boardCol, gridCol = boardConvert column
+        board.[boardRow].[boardCol].[gridRow].[gridCol]
+
     let Validate f idx (board:Board) =
         f idx board
         |> isCorrect
@@ -192,7 +199,12 @@ let board: Board =
 let game = board, StartGame
 
 let test () =
+    
+
     UI.showBoard game
     printfn "Correct? = %b" (Game.CheckSolution game)
 
-test ()
+let b, _ = game
+
+b.[1].[1].[0].[0]
+Board.GetCell 4 1 b

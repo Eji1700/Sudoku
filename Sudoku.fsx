@@ -1,5 +1,5 @@
 let boardConvert idx =
-    match idx with 
+    match idx with
     | 1 -> 0,0
     | 2 -> 0,1
     | 3 -> 0,2
@@ -15,21 +15,22 @@ type Cell =
     | Value of int
     | Empty
 
-let isUnique arr =
-    arr |> Array.distinct |> Array.length = (arr |> Array.length) 
+module Rules =
+    let private isUnique arr =
+        arr |> Array.distinct |> Array.length = (arr |> Array.length)
 
-let noEmpty arr =
-    arr |> Array.contains Empty |> not
+    let private noEmpty arr =
+        arr |> Array.contains Empty |> not
 
-let isCorrect arr =
-    isUnique arr && noEmpty arr 
+    let Correct arr =
+        isUnique arr && noEmpty arr
 
 type Postiion = Top | Middle | Bottom
-type Row = Cell [] 
+type Row = Cell []
 type Column = Cell []
 type Diagonal = Cell []
 
-type Grid = Row [] 
+type Grid = Row []
 module Grid =
     let GetColumn i (g:Grid): Column  =
         [| g.[0].[i]
@@ -40,16 +41,16 @@ module Grid =
         g
         |> Array.map(
             Array.map( fun v ->
-                if v = 0 then Empty 
+                if v = 0 then Empty
                 else Value v))
-    
+
     let Correct (g:Grid) =
         g
         |> Array.concat
-        |> isCorrect    
+        |> Rules.Correct
 
 type Board = Grid [] []
-module Board  = 
+module Board  =
     let GetColumn col (board:Board)  =
         let boardCol, gridCol = boardConvert col
         board
@@ -59,7 +60,7 @@ module Board  =
         let boardRow, gridRow = boardConvert row
         board.[boardRow]
         |> Array.collect(fun r -> r.[gridRow])
-        
+
     let GetCell row column (board:Board) =
         let boardRow, gridRow = boardConvert row
         let boardCol, gridCol = boardConvert column
@@ -67,10 +68,10 @@ module Board  =
 
     let Validate f idx (board:Board) =
         f idx board
-        |> isCorrect
+        |> Rules.Correct
 
-type State = 
-    | EnterData 
+type State =
+    | EnterData
     | CheckData
     | StartGame
     | GameOver
@@ -100,63 +101,62 @@ module Game =
 
 module UI =
     let private printCell c =
-        match c with 
+        match c with
         | Empty ->    printf "| |"
         | Value v -> printf "|%i" v
 
-    let private printRow (r:Row) = 
+    let private printRow (r:Row) =
         r
         |> Array.iter printCell
-        
+
 
     let private showRow ((r:Row), p) =
-        match p with 
-        | Top -> 
+        match p with
+        | Top ->
             printfn "___________________"
             printRow r
             printfn "|"
-        | Middle -> 
+        | Middle ->
             printRow r
             printfn "|"
-        | Bottom -> 
+        | Bottom ->
             printRow r
             printfn "|"
             printfn "-------------------"
 
-    let showBoard g =
+    let DrawBoard g =
         let board, _ = g
         [|1..9|]
-        |> Array.map (fun i -> 
-            let p = 
+        |> Array.map (fun i ->
+            let p =
                 match i with
                 | 1 -> Top
                 | 2 | 5 | 8 | 4 | 7 -> Middle
                 | 3 | 6 | 9 -> Bottom
-            
+
             (Board.GetRow i board), p)
         |> Array.iter showRow
-        
-    ()
+
 let ulGrid: Grid=
-    [|[|1;2;8|] 
+    [|[|1;2;8|]
       [|5;3;4|]
       [|6;7;9|]|]
     |> Grid.ToGrid
 
 let uGrid: Grid=
-    [|[|3;4;5|] 
+    [|[|3;4;5|]
       [|6;7;9|]
       [|1;8;2|]|]
     |> Grid.ToGrid
 
 let urGrid: Grid=
-    [|[|6;9;7|] 
+    [|[|6;9;7|]
       [|2;1;8|]
       [|5;4;3|]|]
     |> Grid.ToGrid
 
 let mlGrid: Grid=
-    [|[|2;1;6|] 
+    [|[|2;1;6|]
       [|4;8;5|]
       [|3;9;7|]|]
     |> Grid.ToGrid
@@ -168,13 +168,13 @@ let mGrid: Grid=
     |> Grid.ToGrid
 
 let mrGrid: Grid=
-    [|[|7;5;9|] 
-      [|3;2;6|] 
+    [|[|7;5;9|]
+      [|3;2;6|]
       [|4;8;1|]|]
     |> Grid.ToGrid
 
 let blGrid: Grid=
-    [|[|7;6;2|] 
+    [|[|7;6;2|]
       [|9;4;3|]
       [|8;5;1|]|]
     |> Grid.ToGrid
@@ -186,8 +186,8 @@ let bGrid: Grid=
     |> Grid.ToGrid
 
 let brGrid: Grid=
-    [|[|8;3;5|] 
-      [|1;6;2|] 
+    [|[|8;3;5|]
+      [|1;6;2|]
       [|9;7;4|]|]
     |> Grid.ToGrid
 
@@ -199,12 +199,5 @@ let board: Board =
 let game = board, StartGame
 
 let test () =
-    
-
-    UI.showBoard game
+    UI.DrawBoard game
     printfn "Correct? = %b" (Game.CheckSolution game)
-
-let b, _ = game
-
-b.[1].[1].[0].[0]
-Board.GetCell 4 1 b

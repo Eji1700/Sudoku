@@ -1,12 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
+    <Compile Include="Helpers.fs" />
+    <Compile Include="Cell.fs" />
+    <Compile Include="Rules.fs" />
+    <Compile Include="GameParts.fs" />
+    <Compile Include="GameLogic.fs" />
+    <Compile Include="UI.fs" />
+    <Compile Include="GameSettings.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
 </Project>

@@ -1,6 +1,7 @@
 namespace UI
 open GameParts
 open Cell
+open GameLogic
 
 module ConsoleOutput =
     let private printCell c =
@@ -28,7 +29,6 @@ module ConsoleOutput =
             printfn "-------------------"
 
     let DrawBoard g =
-        let board, _ = g
         [|1..9|]
         |> Array.map (fun i ->
             let p =
@@ -37,5 +37,5 @@ module ConsoleOutput =
                 | 2 | 5 | 8 | 4 | 7 -> Middle
                 | 3 | 6 | 9 -> Bottom
 
-            (Board.GetRow i board), p)
+            (Board.GetRow i g.Board), p)
         |> Array.iter showRow

@@ -46,9 +46,3 @@ module Board  =
     let Validate f idx (board:Board) =
         f idx board
         |> Rules.Correct
-
-type State =
-    | EnterData
-    | CheckData
-    | StartGame
-    | GameOver

@@ -1,7 +1,8 @@
 namespace GameSettings
 open GameParts
+open GameLogic
 
-module InitialGame =
+module Initial =
     let private ulGrid: Grid=
         [|[|1;2;8|]
           [|5;3;4|]
@@ -61,4 +62,5 @@ module InitialGame =
           [|mlGrid;mGrid;mrGrid|]
           [|blGrid;bGrid;brGrid|]|]
 
-    let StartinGame = board, StartGame
+    let Game = 
+      {Board = board; State = StartGame}

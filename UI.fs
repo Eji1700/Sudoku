@@ -1,9 +1,11 @@
 namespace UI
 open GameParts
 open Cell
-open GameLogic
+
 
 module ConsoleOutput =
+    open System
+    
     let private printCell c =
         match c with
         | Empty ->    printf "| |"
@@ -39,3 +41,7 @@ module ConsoleOutput =
 
             (Board.GetRow i g.Board), p)
         |> Array.iter showRow
+
+    let GameOver() =
+        printfn "Game Over, you win!"
+        Console.ReadLine() |> ignore

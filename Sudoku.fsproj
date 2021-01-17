@@ -8,8 +8,8 @@
     <Compile Include="Cell.fs" />
     <Compile Include="Rules.fs" />
     <Compile Include="GameParts.fs" />
-    <Compile Include="GameLogic.fs" />
     <Compile Include="UI.fs" />
+    <Compile Include="GameLogic.fs" />
     <Compile Include="GameSettings.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

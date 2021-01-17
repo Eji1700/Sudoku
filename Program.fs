@@ -7,7 +7,5 @@ open System
 let main argv =
     let g =  Initial.Game
     ConsoleOutput.DrawBoard g
-    Game.CheckSolution g
-    |> printfn "Correct? = %b"
-    Console.ReadLine() |> ignore
+    GameLoop g
     0

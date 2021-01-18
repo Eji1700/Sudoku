@@ -25,7 +25,10 @@ let rec GameLoop (g: Game) =
             printfn "Incorrect, keep trying"
             {g with State = Running}
             |> GameLoop
-    | StartGame -> ()
+    | StartGame -> 
+        printfn "Press enter to continue. While playing ESC to quit and Space to check your answer"
+        Console.ReadLine() |> ignore
+        GameLoop {g with State = Running }
     | Running -> 
         ConsoleOutput.DrawBoard g
         let r = Console.KeyAvailable

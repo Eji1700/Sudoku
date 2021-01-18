@@ -5,9 +5,12 @@ open System
 
 let private checkInput g (input: ConsoleKeyInfo)  =
     match input with 
-    | e when e.Key = ConsoleKey.Escape -> 
+    | i when i.Key = ConsoleKey.Escape -> 
         {g with State = Quit}
-    | _ -> {g with State = Running}
+    | i when i.Key = ConsoleKey.Spacebar -> 
+        {g with State = CheckData}
+    | _ -> 
+        {g with State = Running}
 
 let rec GameLoop (g: Game) =
     match g.State with
@@ -19,6 +22,7 @@ let rec GameLoop (g: Game) =
             {g with State = GameOver}
             |> GameLoop
         else
+            printfn "Incorrect, keep trying"
             {g with State = Running}
             |> GameLoop
     | StartGame -> ()

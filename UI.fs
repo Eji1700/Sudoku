@@ -44,4 +44,5 @@ module ConsoleOutput =
 
     let GameOver() =
         printfn "Game Over, you win!"
+        printfn "Press enter to quit"
         Console.ReadLine() |> ignore

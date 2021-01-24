@@ -1,10 +1,9 @@
 namespace GameSettings
 open GameParts
-open GameLogic
 
 module Initial =
     let private ulGrid: Grid=
-        [|[|1;2;8|]
+        [|[|2;2;8|]
           [|5;3;4|]
           [|6;7;9|]|]
         |> Grid.ToGrid
@@ -63,4 +62,4 @@ module Initial =
           [|blGrid;bGrid;brGrid|]|]
 
     let Game = 
-      {Board = board; State = StartGame}
+      {Board = board; State = StartGame; Message = "Press enter to continue. While playing ESC to quit and Space to check your answer"}

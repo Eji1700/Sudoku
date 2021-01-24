@@ -3,17 +3,13 @@ open GameParts
 open UI
 open System
 
-let private (|KeyPress|) g input =
-    if input = ConsoleKey.Escape then 
-        {g with State = Quit}
-    elif input = ConsoleKey.Spacebar then 
-        {g with State = CheckData}
-    else 
-        {g with State = Running}
-
 let private checkInput g input  =
     match input with 
-    | KeyPress g newG-> newG 
+    | ConsoleKey.Escape -> 
+        {g with State = Quit}
+    | ConsoleKey.Spacebar ->
+        {g with State = CheckData}
+    | _ -> g 
 
 let rec GameLoop (g: Game) =
     match g.State with

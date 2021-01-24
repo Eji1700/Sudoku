@@ -70,7 +70,7 @@ type State =
     | Quit
 
 type Game = 
-    {Board: Board; State: State}
+    {Board: Board; State: State; Message: string}
 
 module Game =
     let private rulesCheck f (g: Game)=

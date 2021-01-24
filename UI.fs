@@ -28,6 +28,7 @@ module ConsoleOutput =
             printfn "-------------------"
 
     let DrawBoard g =
+        Console.Clear()
         [|1..9|]
         |> Array.map (fun i ->
             let p =

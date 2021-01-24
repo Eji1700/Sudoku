@@ -1,7 +1,5 @@
 namespace UI
 open GameParts
-open Cell
-
 
 module ConsoleOutput =
     open System
@@ -14,7 +12,6 @@ module ConsoleOutput =
     let private printRow (r:Row) =
         r
         |> Array.iter printCell
-
 
     let private showRow ((r:Row), p) =
         match p with

@@ -1,6 +1,19 @@
 namespace GameParts
-open Cell
 open Helpers
+
+type Cell =
+    | Value of int
+    | Empty
+
+module Rules =    
+    let private isUnique arr =
+        arr |> Array.distinct |> Array.length = (arr |> Array.length)
+
+    let private noEmpty arr =
+        arr |> Array.contains Empty |> not
+
+    let Correct arr =
+        isUnique arr && noEmpty arr
 
 type Postiion = Top | Middle | Bottom
 type Row = Cell []
@@ -51,6 +64,7 @@ type State =
     | EnterData
     | CheckData
     | StartGame
+    | DrawBoard
     | Running
     | GameOver
     | Quit

@@ -5,8 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Helpers.fs" />
-    <Compile Include="Cell.fs" />
-    <Compile Include="Rules.fs" />
     <Compile Include="GameParts.fs" />
     <Compile Include="UI.fs" />
     <Compile Include="GameLogic.fs" />

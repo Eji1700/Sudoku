@@ -3,14 +3,17 @@ open GameParts
 open UI
 open System
 
-let private checkInput g (input: ConsoleKeyInfo)  =
-    match input with 
-    | i when i.Key = ConsoleKey.Escape -> 
+let private (|KeyPress|) g input =
+    if input = ConsoleKey.Escape then 
         {g with State = Quit}
-    | i when i.Key = ConsoleKey.Spacebar -> 
+    elif input = ConsoleKey.Spacebar then 
         {g with State = CheckData}
-    | _ -> 
+    else 
         {g with State = Running}
+
+let private checkInput g input  =
+    match input with 
+    | KeyPress g newG-> newG 
 
 let rec GameLoop (g: Game) =
     match g.State with
@@ -28,15 +31,17 @@ let rec GameLoop (g: Game) =
     | StartGame -> 
         printfn "Press enter to continue. While playing ESC to quit and Space to check your answer"
         Console.ReadLine() |> ignore
-        GameLoop {g with State = Running }
-    | Running -> 
+        GameLoop {g with State = DrawBoard}
+    | DrawBoard ->
         ConsoleOutput.DrawBoard g
+        GameLoop {g with State = Running}
+    | Running -> 
         let r = Console.KeyAvailable
         if r then
             {g with State = Running}
             |> GameLoop
         else
-            Console.ReadKey(true)
+            Console.ReadKey(true).Key
             |> checkInput g
             |> GameLoop
     | GameOver -> 

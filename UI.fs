@@ -27,6 +27,9 @@ module ConsoleOutput =
             printfn "|"
             printfn "-------------------"
     
+    let Init() =   
+        Console.CursorVisible <- false
+
     let DisplayMessage s =
         printfn "%s" s
 

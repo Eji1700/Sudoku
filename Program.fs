@@ -1,9 +1,10 @@
 open GameSettings
 open GameLogic
-open System
 
 [<EntryPoint>]
 let main argv =
-    Console.CursorVisible <- false
+    match argv with
+    | [||] -> ()
+    | _ -> UI.ConsoleOutput.Init()
     GameLoop Initial.Game
     0

@@ -31,7 +31,7 @@ module ConsoleOutput =
         printfn "%s" s
 
     let DrawBoard g =
-        Console.Clear()
+        Console.SetCursorPosition (0,0)
         [|1..9|]
         |> Array.map (fun i ->
             let p =

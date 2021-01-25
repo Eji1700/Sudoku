@@ -62,4 +62,4 @@ module Initial =
           [|blGrid;bGrid;brGrid|]|]
 
     let Game = 
-      {Board = board; State = StartGame; Message = "Press enter to continue. While playing ESC to quit and Space to check your answer"}
+      {Board = board; State = StartGame;}

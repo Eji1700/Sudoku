@@ -13,9 +13,15 @@ let private checkInput g input  =
 
 let rec GameLoop (g: Game) =
     match g.State with
+    | StartGame -> 
+        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer"
+        Console.ReadLine() |> ignore
+        Console.Clear()
+        GameLoop {g with State = DrawBoard}
     | EnterData -> ()
     | CheckData ->
         let s =  Game.CheckSolution g
+        ConsoleOutput.DrawBoard g
         sprintf "Correct?: %b" s
         |> ConsoleOutput.DisplayMessage
         if s then 
@@ -25,10 +31,6 @@ let rec GameLoop (g: Game) =
             ConsoleOutput.DisplayMessage "Incorrect, keep trying"
             {g with State = Running}
             |> GameLoop
-    | StartGame -> 
-        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer"
-        Console.ReadLine() |> ignore
-        GameLoop {g with State = DrawBoard}
     | DrawBoard ->
         ConsoleOutput.DrawBoard g
         GameLoop {g with State = Running}

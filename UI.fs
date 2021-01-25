@@ -26,6 +26,9 @@ module ConsoleOutput =
             printRow r
             printfn "|"
             printfn "-------------------"
+    
+    let DisplayMessage s =
+        printfn "%s" s
 
     let DrawBoard g =
         Console.Clear()

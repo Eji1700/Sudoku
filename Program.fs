@@ -3,6 +3,5 @@ open GameLogic
 
 [<EntryPoint>]
 let main argv =
-    let g =  Initial.Game
-    GameLoop g
+    GameLoop Initial.Game
     0

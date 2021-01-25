@@ -16,16 +16,17 @@ let rec GameLoop (g: Game) =
     | EnterData -> ()
     | CheckData ->
         let s =  Game.CheckSolution g
-        printfn "Correct?: %b" s
+        sprintf "Correct?: %b" s
+        |> ConsoleOutput.DisplayMessage
         if s then 
             {g with State = GameOver}
             |> GameLoop
         else
-            printfn "Incorrect, keep trying"
+            ConsoleOutput.DisplayMessage "Incorrect, keep trying"
             {g with State = Running}
             |> GameLoop
     | StartGame -> 
-        printfn "Press enter to continue. While playing ESC to quit and Space to check your answer"
+        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer"
         Console.ReadLine() |> ignore
         GameLoop {g with State = DrawBoard}
     | DrawBoard ->

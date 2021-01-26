@@ -1,9 +1,21 @@
 namespace UI
 open GameParts
-
 module ConsoleOutput =
     open System
     
+    let private consoleConvert row =
+        match row with 
+        | 1 -> 1
+        | 2 -> 2
+        | 3 -> 3
+        | 4 -> 5
+        | 5 -> 6
+        | 6 -> 7
+        | 7 -> 9
+        | 8 -> 10
+        | 9 -> 11
+        | _ -> failwith "ConsoleConvert takes 1-9"
+
     let private printCell c =
         match c with
         | Empty ->    printf "| |"
@@ -30,7 +42,8 @@ module ConsoleOutput =
     let Init() =   
         Console.CursorVisible <- false
 
-    let DisplayMessage s =
+    let DisplayMessage pos s =
+        Console.SetCursorPosition pos
         printfn "%s" s
 
     let DrawBoard g =

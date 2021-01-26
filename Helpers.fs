@@ -11,4 +11,4 @@ let BoardConvert idx =
     | 7 -> 2,0
     | 8 -> 2,1
     | 9 -> 2,2
-    | _ -> failwith "boardCovert takes 1-9"
+    | _ -> failwith "BoardCovert takes 1-9"

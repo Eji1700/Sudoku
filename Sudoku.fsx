@@ -133,6 +133,7 @@ module UI =
                 | 1 -> Top
                 | 2 | 5 | 8 | 4 | 7 -> Middle
                 | 3 | 6 | 9 -> Bottom
+                | _ -> Bottom
 
             (Board.GetRow i board), p)
         |> Array.iter showRow

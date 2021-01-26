@@ -9,6 +9,10 @@ let private checkInput g input  =
         {g with State = Quit}
     | ConsoleKey.Spacebar ->
         {g with State = CheckData}
+    | ConsoleKey.K 
+    | ConsoleKey.S
+    | ConsoleKey.DownArrow  ->
+        {g with State = CheckData}
     | _ -> g 
 
 let rec GameLoop (g: Game) =

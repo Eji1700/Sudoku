@@ -1,24 +1,30 @@
 namespace GameParts
 open Helpers
 
-type Cell =
+type CellValue =
     | Value of int
     | Empty
 
-module Rules =    
-    let private isUnique arr =
-        arr |> Array.distinct |> Array.length = (arr |> Array.length)
-
-    let private noEmpty arr =
-        arr |> Array.contains Empty |> not
-
-    let Correct arr =
-        isUnique arr && noEmpty arr
+type Cell =
+    {Value: CellValue
+     Selected: bool
+     Marked: bool}
 
 type Postiion = Top | Middle | Bottom
 type Row = Cell []
 type Column = Cell []
 type Diagonal = Cell []
+
+module Rules =    
+    let private isUnique arr =
+        arr |> Array.distinct |> Array.length = (arr |> Array.length)
+
+    let private noEmpty (arr:Row) =
+        arr |> Array.contains Empty |> not
+
+    let Correct arr =
+        isUnique arr && noEmpty arr
+
 
 type Grid = Row []
 module Grid =
@@ -70,7 +76,8 @@ type State =
     | Quit
 
 type Game = 
-    {Board: Board; State: State;}
+    {Board: Board
+     State: State}
 
 module Game =
     let private rulesCheck f (g: Game)=

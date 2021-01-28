@@ -17,6 +17,7 @@ module ConsoleOutput =
         | _ -> failwith "ConsoleConvert takes 1-9"
 
     let private printCell c =
+        
         match c.Value with
         | Empty ->    printf "| |"
         | Value v -> printf "|%i" v
@@ -41,6 +42,7 @@ module ConsoleOutput =
     
     let Init() =   
         Console.CursorVisible <- false
+        Console.BackgroundColor <- ConsoleColor.DarkRed
 
     let DisplayMessage pos s =
         Console.SetCursorPosition pos

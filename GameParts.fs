@@ -5,19 +5,22 @@ type CellValue =
     | Value of int
     | Empty
 
+type CellState =
+    | Marked
+    | Given
+    | Wrong
+    | Unselected
+    | Selected
+
 type Cell =
     {   Value: CellValue
-        Selected: bool
-        Marked: bool
-        Given: bool
+        State: CellState
     } 
     
 module Cell =
-    let Create v= 
+    let Create s v= 
         {   Value = v
-            Selected = false
-            Marked = false
-            Given = false
+            State = s
         }
 
 module Rules =    
@@ -50,9 +53,9 @@ module Grid =
         |> Array.map(
             Array.map( fun v ->
                 if v = 0 then 
-                    Cell.Create Empty
+                    Cell.Create Unselected Empty
                 else 
-                    Cell.Create (Value v)
+                    Cell.Create Unselected (Value v)
             )
         )
 

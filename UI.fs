@@ -16,11 +16,27 @@ module ConsoleOutput =
         | 9 -> 11
         | _ -> failwith "ConsoleConvert takes 1-9"
 
+    let private setColor background foreground =
+        Console.BackgroundColor <- background
+        Console.ForegroundColor <- foreground
+
     let private printCell c =
-        
+        let b, f = Console.BackgroundColor, Console.ForegroundColor
+        match c.CellState with
+        | Selected -> 
+            setColor ConsoleColor.White ConsoleColor.Black
+        | Marked ->
+            setColor ConsoleColor.Gray ConsoleColor.White
+        | Given ->
+            setColor ConsoleColor.White ConsoleColor.White
+        | Wrong ->
+            setColor ConsoleColor.DarkRed ConsoleColor.White
+        | Unselected -> ()
+
         match c.Value with
         | Empty ->    printf "| |"
         | Value v -> printf "|%i" v
+        setColor b f 
 
     let private printRow (r:Row) =
         r
@@ -42,7 +58,6 @@ module ConsoleOutput =
     
     let Init() =   
         Console.CursorVisible <- false
-        Console.BackgroundColor <- ConsoleColor.DarkRed
 
     let DisplayMessage pos s =
         Console.SetCursorPosition pos

@@ -14,13 +14,13 @@ type CellState =
 
 type Cell =
     {   Value: CellValue
-        State: CellState
+        CellState: CellState
     } 
     
 module Cell =
     let Create s v= 
         {   Value = v
-            State = s
+            CellState = s
         }
 
 module Rules =    

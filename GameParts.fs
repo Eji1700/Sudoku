@@ -19,6 +19,15 @@ type Cell =
     
 module Cell =
     let Create s v= 
+        let rnd =System.Random()
+        let s = 
+            match rnd.Next(0,5) with
+            | 0 -> Marked
+            | 1 -> Given
+            | 2 -> Wrong
+            | 3 -> Unselected
+            | 4 -> Selected
+
         {   Value = v
             CellState = s
         }

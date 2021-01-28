@@ -5,6 +5,7 @@ open GameLogic
 let main argv =
     match argv with
     | [||] -> ()
-    | _ -> UI.ConsoleOutput.Init()
+    | _ -> 
+        UI.ConsoleOutput.Init()
     GameLoop Initial.Game
     0

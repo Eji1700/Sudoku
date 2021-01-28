@@ -20,19 +20,22 @@ module ConsoleOutput =
         Console.BackgroundColor <- background
         Console.ForegroundColor <- foreground
 
-    let private printCell c =
+    let private checkCellColor c =
         let b, f = Console.BackgroundColor, Console.ForegroundColor
         match c.CellState with
         | Selected -> 
             setColor ConsoleColor.White ConsoleColor.Black
         | Marked ->
-            setColor ConsoleColor.Gray ConsoleColor.White
+            setColor ConsoleColor.DarkGreen ConsoleColor.White
         | Given ->
-            setColor ConsoleColor.White ConsoleColor.White
+            setColor ConsoleColor.White ConsoleColor.Green
         | Wrong ->
             setColor ConsoleColor.DarkRed ConsoleColor.White
         | Unselected -> ()
+        b, f
 
+    let private printCell c =
+        let b,f = checkCellColor c
         match c.Value with
         | Empty ->    printf "| |"
         | Value v -> printf "|%i" v
@@ -58,7 +61,8 @@ module ConsoleOutput =
     
     let Init() =   
         Console.CursorVisible <- false
-
+        Console.Clear()
+        
     let DisplayMessage pos s =
         Console.SetCursorPosition pos
         printfn "%s" s

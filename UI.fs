@@ -28,7 +28,7 @@ module ConsoleOutput =
         | Marked ->
             setColor ConsoleColor.DarkGreen ConsoleColor.White
         | Given ->
-            setColor ConsoleColor.White ConsoleColor.Green
+            setColor ConsoleColor.DarkGray ConsoleColor.Black
         | Wrong ->
             setColor ConsoleColor.DarkRed ConsoleColor.White
         | Unselected -> ()

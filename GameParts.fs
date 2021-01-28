@@ -6,25 +6,37 @@ type CellValue =
     | Empty
 
 type Cell =
-    {Value: CellValue
-     Selected: bool
-     Marked: bool}
-
-type Postiion = Top | Middle | Bottom
-type Row = Cell []
-type Column = Cell []
-type Diagonal = Cell []
+    {   Value: CellValue
+        Selected: bool
+        Marked: bool
+        Given: bool
+    } 
+    
+module Cell =
+    let Create v= 
+        {   Value = v
+            Selected = false
+            Marked = false
+            Given = false
+        }
 
 module Rules =    
     let private isUnique arr =
         arr |> Array.distinct |> Array.length = (arr |> Array.length)
 
-    let private noEmpty (arr:Row) =
-        arr |> Array.contains Empty |> not
+    let private noEmpty arr =
+        arr
+        |> Array.map (fun cell -> cell.Value) 
+        |> Array.contains Empty 
+        |> not
 
     let Correct arr =
         isUnique arr && noEmpty arr
 
+type Postiion = Top | Middle | Bottom
+type Row = Cell []
+type Column = Cell []
+type Diagonal = Cell []
 
 type Grid = Row []
 module Grid =
@@ -37,8 +49,12 @@ module Grid =
         g
         |> Array.map(
             Array.map( fun v ->
-                if v = 0 then Empty
-                else Value v))
+                if v = 0 then 
+                    Cell.Create Empty
+                else 
+                    Cell.Create (Value v)
+            )
+        )
 
     let Correct (g:Grid) =
         g

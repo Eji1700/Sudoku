@@ -3,7 +3,7 @@ open GameParts
 
 module Initial =
     let private ulGrid: Grid=
-        [|[|2;2;8|]
+        [|[|0;2;8|]
           [|5;3;4|]
           [|6;7;9|]|]
         |> Grid.ToGrid

@@ -37,7 +37,7 @@ module ConsoleOutput =
     let private printCell c =
         let b,f = checkCellColor c
         match c.Value with
-        | Empty ->    printf "| |"
+        | Empty ->    printf "| "
         | Value v -> printf "|%i" v
         setColor b f 
 
@@ -62,7 +62,7 @@ module ConsoleOutput =
     let Init() =   
         Console.CursorVisible <- false
         Console.Clear()
-        
+
     let DisplayMessage pos s =
         Console.SetCursorPosition pos
         printfn "%s" s

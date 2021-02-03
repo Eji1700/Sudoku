@@ -58,6 +58,7 @@ module ConsoleOutput =
             printRow r
             printfn "|"
             printfn "-------------------"
+             
     
     let Init() =   
         Console.CursorVisible <- false

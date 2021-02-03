@@ -15,6 +15,7 @@ type CellState =
 type Cell =
     {   Value: CellValue
         CellState: CellState
+        ActiveCell: int * int
     } 
     
 module Cell =
@@ -30,6 +31,7 @@ module Cell =
 
         {   Value = v
             CellState = s
+            ActiveCell = 1,1
         }
 
 module Rules =    

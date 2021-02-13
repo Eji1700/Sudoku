@@ -15,23 +15,12 @@ type CellState =
 type Cell =
     {   Value: CellValue
         CellState: CellState
-        ActiveCell: int * int
     } 
     
 module Cell =
     let Create s v= 
-        let rnd =System.Random()
-        let s = 
-            match rnd.Next(0,5) with
-            | 0 -> Marked
-            | 1 -> Given
-            | 2 -> Wrong
-            | 3 -> Unselected
-            | 4 -> Selected
-
         {   Value = v
-            CellState = s
-            ActiveCell = 1,1
+            CellState = s 
         }
 
 module Rules =    
@@ -91,6 +80,10 @@ module Board  =
         let boardRow, gridRow = BoardConvert row
         let boardCol, gridCol = BoardConvert column
         board.[boardRow].[boardCol].[gridRow].[gridCol]
+
+    let ChangeCellState row column state (board:Board) =
+        { GetCell row column board
+            with CellState = state}
 
     let Validate f idx (board:Board) =
         f idx board

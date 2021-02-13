@@ -52,7 +52,7 @@ module Grid =
         g
         |> Array.map(
             Array.map( fun v ->
-                if v = 0 then 
+                if v <= 0 || v > 9 then 
                     Cell.Create Unselected Empty
                 else 
                     Cell.Create Unselected (Value v)
@@ -99,8 +99,8 @@ type State =
     | Quit
 
 type Game = 
-    {Board: Board
-     State: State}
+    {   Board: Board
+        State: State}
 
 module Game =
     let private rulesCheck f (g: Game)=

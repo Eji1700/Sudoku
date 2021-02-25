@@ -62,4 +62,6 @@ module Initial =
       [|blGrid;bGrid;brGrid|]|]
 
   let Game = 
-    {Board = board; State = StartGame;}
+    { Board = board 
+      State = StartGame
+      ActiveCell = 1,1}

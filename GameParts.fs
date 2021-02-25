@@ -76,14 +76,21 @@ module Board  =
         board.[boardRow]
         |> Array.collect(fun r -> r.[gridRow])
 
-    let GetCell row column (board:Board) =
+    let private getCell row column (board:Board) =
         let boardRow, gridRow = BoardConvert row
         let boardCol, gridCol = BoardConvert column
-        board.[boardRow].[boardCol].[gridRow].[gridCol]
+        board.[boardCol].[boardRow].[gridCol].[gridRow]
 
+    let private updateCell row column cell (board:Board) =
+        let boardRow, gridRow = BoardConvert row
+        let boardCol, gridCol = BoardConvert column
+        board.[boardCol].[boardRow].[gridCol].[gridRow] <- cell
+       
     let ChangeCellState row column state (board:Board) =
-        { GetCell row column board
-            with CellState = state}
+        let newCell = 
+            { getCell row column board
+                with CellState = state}
+        updateCell row column newCell board
 
     let Validate f idx (board:Board) =
         f idx board
@@ -100,7 +107,8 @@ type State =
 
 type Game = 
     {   Board: Board
-        State: State}
+        State: State
+        ActiveCell: int * int}
 
 module Game =
     let private rulesCheck f (g: Game)=

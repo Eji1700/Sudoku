@@ -68,7 +68,7 @@ let rec GameLoop (g: Game) =
         GameLoop {g with State = Running}
     | Running -> 
         let r = Console.KeyAvailable
-        if r then
+        if r |> not then
             {g with State = Running}
             |> GameLoop
         else

@@ -3,7 +3,7 @@ open GameParts
 open UI
 open System
 
-let private changeCell xAdj yAdj g =
+let private moveCell xAdj yAdj g =
     let x, y = g.ActiveCell
     let newX = x + xAdj
     let newY = y + yAdj
@@ -28,19 +28,19 @@ let private checkInput g input  =
     | ConsoleKey.K 
     | ConsoleKey.S
     | ConsoleKey.DownArrow  ->
-        changeCell 0 1 g
+        moveCell 0 1 g
     | ConsoleKey.I
     | ConsoleKey.W
     | ConsoleKey.UpArrow  ->
-        changeCell 0 -1 g
+        moveCell 0 -1 g
     | ConsoleKey.J
     | ConsoleKey.A
     | ConsoleKey.LeftArrow  ->
-        changeCell -1 0 g
+        moveCell -1 0 g
     | ConsoleKey.L
     | ConsoleKey.D
     | ConsoleKey.RightArrow  ->
-        changeCell 1 0 g
+        moveCell 1 0 g
     | _ -> g 
 
 let rec GameLoop (g: Game) =

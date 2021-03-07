@@ -76,21 +76,15 @@ module Board  =
         board.[boardRow]
         |> Array.collect(fun r -> r.[gridRow])
 
-    let private getCell row column (board:Board) =
+    let private getCellIndex row column =
         let boardRow, gridRow = BoardConvert row
         let boardCol, gridCol = BoardConvert column
-        board.[boardCol].[boardRow].[gridCol].[gridRow]
-
-    let private updateCell row column cell (board:Board) =
-        let boardRow, gridRow = BoardConvert row
-        let boardCol, gridCol = BoardConvert column
-        board.[boardCol].[boardRow].[gridCol].[gridRow] <- cell
+        boardCol, boardRow, gridCol, gridRow
        
     let ChangeCellState row column state (board:Board) =
-        let newCell = 
-            { getCell row column board
-                with CellState = state}
-        updateCell row column newCell board
+        let boardCol, boardRow, gridCol, gridRow = getCellIndex  row column
+        board.[boardCol].[boardRow].[gridCol].[gridRow] <-
+            {board.[boardCol].[boardRow].[gridCol].[gridRow] with CellState = state}
 
     let Validate f idx (board:Board) =
         f idx board

@@ -86,6 +86,12 @@ module Board  =
         board.[boardCol].[boardRow].[gridCol].[gridRow] <-
             {board.[boardCol].[boardRow].[gridCol].[gridRow] with CellState = state}
 
+    let ChangeCellValue row column value (board:Board) =
+        let newCell =
+            { getCell row column board 
+                with Value = value}
+        updateCell row column newCell board
+
     let Validate f idx (board:Board) =
         f idx board
         |> Rules.Correct

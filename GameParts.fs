@@ -37,58 +37,48 @@ module Rules =
 
 type Row = Cell []
 type Column = Cell []
+type Board = Row []
 
-// type Grid = Row []
-// module Grid =
-//     let GetColumn i (g:Grid): Column  =
-//         [| g.[0].[i]
-//            g.[1].[i]
-//            g.[2].[i] |]
+module Test =
+    let board : Board =
+        [|0..8|]
+        |> Array.map(fun x ->
+            [|0..8|]
+            |> Array.map(fun y ->
+                Cell.Create Unselected (Value y)
+            )
+        )
 
-//     let ToGrid g  =
-//         g
-//         |> Array.map(
-//             Array.map( fun v ->
-//                 if v <= 0 || v > 9 then 
-//                     Cell.Create Unselected Empty
-//                 else 
-//                     Cell.Create Unselected (Value v)
-//             )
-//         )
-
-//     let Correct (g:Grid) =
-//         g
-//         |> Array.concat
-//         |> Rules.Correct
-
-type Board = Row [] []
 module Board  =
-    let GetColumn col (board:Board)  =
-        for i in 0..8 do
-            printfn "%i" i
+    let GetColumn col (board:Board) : Column  =
+        [|0..8|]
+        |> Array.map(fun i -> board.[i].[col])
 
     let GetRow row (board:Board) : Row =
-        let boardRow, gridRow = BoardConvert row
-        board.[boardRow]
-        |> Array.collect(fun r -> r.[gridRow])
-
-    let private getCellIndex row column =
-        let boardRow, gridRow = BoardConvert row
-        let boardCol, gridCol = BoardConvert column
-        boardCol, boardRow, gridCol, gridRow
+        board.[row]
        
     let ChangeCellState row column state (board:Board) =
-        let boardCol, boardRow, gridCol, gridRow = getCellIndex  row column
-        board.[boardCol].[boardRow].[gridCol].[gridRow] <-
-            {board.[boardCol].[boardRow].[gridCol].[gridRow] with CellState = state}
+        board.[row].[column] <- {board.[row].[column] with CellState = state}
 
     let ChangeCellValue row column value (board:Board) =
-        let boardCol, boardRow, gridCol, gridRow = getCellIndex  row column
-        board.[boardCol].[boardRow].[gridCol].[gridRow] <-
-            {board.[boardCol].[boardRow].[gridCol].[gridRow] with Value = value}
+        board.[row].[column] <- {board.[row].[column] with Value = value}
 
     let Validate f idx (board:Board) =
         f idx board
+        |> Rules.Correct
+
+type Grid = Row []
+module Grid =
+    let Get (board:Board) (row,col) : Grid =
+        [|
+            board.[row].[col..col+2] 
+            board.[row+1].[col..col+2] 
+            board.[row+2].[col..col+2] 
+        |]
+
+    let Correct (g:Grid) =
+        g
+        |> Array.concat
         |> Rules.Correct
 
 type State =
@@ -107,7 +97,7 @@ type Game =
 
 module Game =
     let private rulesCheck f (g: Game)=
-        [|1..9|]
+        [|0..8|]
         |> Array.map(fun i -> Board.Validate f i g.Board)
         |> Array.distinct
         |> Array.length = 1
@@ -120,7 +110,19 @@ module Game =
         rulesCheck Board.GetRow g
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (
-            g.Board
-            |> Array.collect(Array.map Grid.Correct)
+            [|
+                0,0
+                0,3
+                0,6
+                3,0
+                3,3
+                3,6
+                6,0
+                6,3
+                6,6
+            |]
+            |> Array.map(fun t -> Grid.Get g.Board t)
+            |> Array.map Grid.Correct
             |> Array.distinct
-            |> Array.length = 1)
+            |> Array.length = 1
+            )

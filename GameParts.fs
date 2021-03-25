@@ -1,5 +1,4 @@
 namespace GameParts
-open Helpers
 
 type CellValue =
     | Value of int
@@ -36,40 +35,37 @@ module Rules =
     let Correct arr =
         isUnique arr && noEmpty arr
 
-type Postiion = Top | Middle | Bottom
 type Row = Cell []
 type Column = Cell []
-type Diagonal = Cell []
 
-type Grid = Row []
-module Grid =
-    let GetColumn i (g:Grid): Column  =
-        [| g.[0].[i]
-           g.[1].[i]
-           g.[2].[i] |]
+// type Grid = Row []
+// module Grid =
+//     let GetColumn i (g:Grid): Column  =
+//         [| g.[0].[i]
+//            g.[1].[i]
+//            g.[2].[i] |]
 
-    let ToGrid g  =
-        g
-        |> Array.map(
-            Array.map( fun v ->
-                if v <= 0 || v > 9 then 
-                    Cell.Create Unselected Empty
-                else 
-                    Cell.Create Unselected (Value v)
-            )
-        )
+//     let ToGrid g  =
+//         g
+//         |> Array.map(
+//             Array.map( fun v ->
+//                 if v <= 0 || v > 9 then 
+//                     Cell.Create Unselected Empty
+//                 else 
+//                     Cell.Create Unselected (Value v)
+//             )
+//         )
 
-    let Correct (g:Grid) =
-        g
-        |> Array.concat
-        |> Rules.Correct
+//     let Correct (g:Grid) =
+//         g
+//         |> Array.concat
+//         |> Rules.Correct
 
-type Board = Grid [] []
+type Board = Row [] []
 module Board  =
     let GetColumn col (board:Board)  =
-        let boardCol, gridCol = BoardConvert col
-        board
-        |> Array.collect(fun r -> Grid.GetColumn gridCol r.[boardCol])
+        for i in 0..8 do
+            printfn "%i" i
 
     let GetRow row (board:Board) : Row =
         let boardRow, gridRow = BoardConvert row

@@ -18,7 +18,9 @@ type Cell =
     
 module Cell =
     let Create s v= 
-        {   Value = v
+        let value =
+            if v = 0 then Empty else Value v
+        {   Value = value
             CellState = s 
         }
 
@@ -37,19 +39,18 @@ module Rules =
 
 type Row = Cell []
 type Column = Cell []
-type Board = Row []
 
-module Test =
-    let board : Board =
-        [|0..8|]
-        |> Array.map(fun x ->
-            [|0..8|]
-            |> Array.map(fun y ->
-                Cell.Create Unselected (Value y)
+type Board = Row []
+module Board  =
+    let Create arr : Board =
+        arr
+        |> Array.map( fun r ->
+            r
+            |> Array.map (fun c->
+                Cell.Create Unselected c
             )
         )
-
-module Board  =
+        
     let GetColumn col (board:Board) : Column  =
         [|0..8|]
         |> Array.map(fun i -> board.[i].[col])

@@ -4,7 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Helpers.fs" />
     <Compile Include="GameParts.fs" />
     <Compile Include="UI.fs" />
     <Compile Include="GameLogic.fs" />

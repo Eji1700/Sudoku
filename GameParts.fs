@@ -37,6 +37,7 @@ module Rules =
     let Correct arr =
         isUnique arr && noEmpty arr
 
+type Position = Top | Middle | Bottom
 type Row = Cell []
 type Column = Cell []
 
@@ -59,10 +60,10 @@ module Board  =
         board.[row]
        
     let ChangeCellState row column state (board:Board) =
-        board.[row].[column] <- {board.[row].[column] with CellState = state}
+        board.[column].[row] <- {board.[column].[row] with CellState = state}
 
     let ChangeCellValue row column value (board:Board) =
-        board.[row].[column] <- {board.[row].[column] with Value = value}
+        board.[column].[row] <- {board.[column].[row] with Value = value}
 
     let Validate f idx (board:Board) =
         f idx board
@@ -70,7 +71,7 @@ module Board  =
 
 type Grid = Row []
 module Grid =
-    let Get (board:Board) (row,col) : Grid =
+    let Get (row,col) (board:Board) : Grid =
         [|
             board.[row].[col..col+2] 
             board.[row+1].[col..col+2] 
@@ -81,6 +82,20 @@ module Grid =
         g
         |> Array.concat
         |> Rules.Correct
+
+    let AllGrids (b:Board) =
+        [|
+            0,0
+            0,3
+            0,6
+            3,0
+            3,3
+            3,6
+            6,0
+            6,3
+            6,6
+        |]
+        |> Array.map(fun coords -> Get coords b)
 
 type State =
     | EnterData
@@ -111,18 +126,7 @@ module Game =
         rulesCheck Board.GetRow g
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (
-            [|
-                0,0
-                0,3
-                0,6
-                3,0
-                3,3
-                3,6
-                6,0
-                6,3
-                6,6
-            |]
-            |> Array.map(fun t -> Grid.Get g.Board t)
+            Grid.AllGrids g.Board
             |> Array.map Grid.Correct
             |> Array.distinct
             |> Array.length = 1

@@ -7,10 +7,10 @@ let private moveCell xAdj yAdj g =
     let x, y = g.ActiveCell
     let newX = x + xAdj
     let newY = y + yAdj
-    if newX < 10 && 
-        newY < 10 &&
-        newX > 0 &&
-        newY > 0    then 
+    if newX < 9 && 
+        newY < 9 &&
+        newX > -1 &&
+        newY > -1   then 
         Board.ChangeCellState x y Unselected g.Board
         Board.ChangeCellState newX newY Selected g.Board
         {g with 

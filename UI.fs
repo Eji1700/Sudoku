@@ -70,13 +70,13 @@ module ConsoleOutput =
 
     let DrawBoard g =
         Console.SetCursorPosition (0,0)
-        [|1..9|]
+        [|0..8|]
         |> Array.map (fun i ->
             let p =
                 match i with
-                | 1 -> Top
-                | 2 | 5 | 8 | 4 | 7 -> Middle
-                | 3 | 6 | 9 -> Bottom
+                | 0 -> Top
+                | 1 | 4 | 7 | 3 | 6 -> Middle
+                | 2 | 5 | 8 -> Bottom
                 | _ -> Bottom
 
             (Board.GetRow i g.Board), p)

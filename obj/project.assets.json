@@ -89,23 +89,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\regul\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\David Ungar\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
+      "projectUniqueName": "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
       "projectName": "Sudoku",
-      "projectPath": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
-      "packagesPath": "C:\\Users\\regul\\.nuget\\packages\\",
-      "outputPath": "C:\\Code\\F#\\Sudoku\\obj\\",
+      "projectPath": "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
+      "packagesPath": "C:\\Users\\David Ungar\\.nuget\\packages\\",
+      "outputPath": "D:\\Code\\F#\\Sudoku\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\regul\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\David Ungar\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -147,7 +143,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
       }
     }
   }

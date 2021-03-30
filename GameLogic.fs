@@ -19,6 +19,25 @@ let private moveCell xAdj yAdj g =
     else
         {g with State = Running}
 
+let rec private getValue() =
+    ConsoleOutput.DisplayMessage (0,14) "Enter a value 0 - 9"
+    let result = Console.ReadKey().Key
+    match result with
+    | ConsoleKey.D0
+    | ConsoleKey.D1
+    | ConsoleKey.D2
+    | ConsoleKey.D3
+    | ConsoleKey.D4
+    | ConsoleKey.D5
+    | ConsoleKey.D6
+    | ConsoleKey.D7
+    | ConsoleKey.D8
+    | ConsoleKey.D9 ->
+        printfn "valid key"
+    | _ ->
+        ConsoleOutput.DisplayMessage (0,14) "Enter a value 0 - 9"
+        getValue()
+
 let private checkInput g input  =
     match input with 
     | ConsoleKey.Escape -> 
@@ -41,6 +60,46 @@ let private checkInput g input  =
     | ConsoleKey.D
     | ConsoleKey.RightArrow  ->
         moveCell 1 0 g
+    | ConsoleKey.D0 -> 
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 0) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D1 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 1) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D2 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 2) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D3 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 3) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D4 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 4) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D5 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 5) g.Board
+        {g with State = DrawBoard}   
+    | ConsoleKey.D6 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 6) g.Board
+        {g with State = DrawBoard} 
+    | ConsoleKey.D7 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 7) g.Board
+        {g with State = DrawBoard} 
+    | ConsoleKey.D8 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 8) g.Board
+        {g with State = DrawBoard} 
+    | ConsoleKey.D9 ->
+        let r,c = g.ActiveCell
+        Board.ChangeCellValue r c (Value 9) g.Board
+        {g with State = DrawBoard} 
     | _ -> g 
 
 let rec GameLoop (g: Game) =
@@ -68,8 +127,7 @@ let rec GameLoop (g: Game) =
         GameLoop {g with State = Running}
     | Running -> 
         let r = Console.KeyAvailable
-        if r
-         |> not then
+        if r |> not then
             {g with State = Running}
             |> GameLoop
         else

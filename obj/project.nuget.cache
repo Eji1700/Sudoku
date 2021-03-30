@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "SmMm9BL24ersOVmhk8N8NZKyF6hstjOcW+lflZT/7kvgcYadbRZhsuBA6HwRmrNJqwo+iaNbpGxK2nxDzhys6A==",
+  "dgSpecHash": "Cds6BA7L+DWC3yHOyJlgrbwu8l+/7232XDssMUYa9MsLeCEwegOqRcm4nsMdiwjkzMBlUMyTQCfutp50kJeOLw==",
   "success": true,
-  "projectFilePath": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
+  "projectFilePath": "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
   "expectedPackageFiles": [
-    "C:\\Users\\regul\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512"
+    "C:\\Users\\David Ungar\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

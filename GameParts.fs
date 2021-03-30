@@ -113,6 +113,7 @@ type Game =
 
 module Game =
     let private rulesCheck f (g: Game)=
+        //Need to check for empty/0 cells
         [|0..8|]
         |> Array.map(fun i -> Board.Validate f i g.Board)
         |> Array.distinct
@@ -123,6 +124,7 @@ module Game =
 
     let CheckSolution (g:Game) =
         //Result pattern?
+        //Need to check for empty/0 cells
         rulesCheck Board.GetRow g
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (

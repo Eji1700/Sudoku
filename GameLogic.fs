@@ -12,8 +12,8 @@ type Direction =
 module private Direction =
     let Get d amount = 
         match d with 
-        | Up -> (0, amount)
-        | Down -> (0, amount * -1)
+        | Up -> (0, amount * -1)
+        | Down -> (0, amount)
         | Left -> (amount * -1, 0)
         | Right -> (amount, 0)
 

@@ -30,7 +30,7 @@ let rec private moveCell direction amount g =
     let newY = y + yAdj
     
     if boundryCheck newX newY  then 
-        match  g.Board.[newX].[newY].CellState with  
+        match  g.Board.[newY].[newX].CellState with  
         | Given ->  
             let incr = amount + 1
             moveCell direction incr g

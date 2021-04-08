@@ -19,7 +19,7 @@ type Cell =
 module Cell =
     let Create s v= 
         let value =
-            if v = 0 then Empty else Value v
+            if v = 0  then Empty else Value v
         {   Value = value
             CellState = s 
         }
@@ -48,7 +48,10 @@ module Board  =
         |> Array.map( fun r ->
             r
             |> Array.map (fun c->
-                Cell.Create Unselected c
+                if c = 0 then 
+                    Cell.Create Unselected c
+                else
+                    Cell.Create Given c
             )
         )
         

@@ -119,8 +119,8 @@ module Game =
         //Need to check for empty/0 cells
         [|0..8|]
         |> Array.map(fun i -> Board.Validate f i g.Board)
-        |> Array.distinct
-        |> Array.length = 1
+        |> Array.filter(fun v -> v = false) 
+        |> (fun arr -> arr.Length = 0)
 
     let private trueBind f x =
         if x then f else false

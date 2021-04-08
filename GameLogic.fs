@@ -3,19 +3,43 @@ open GameParts
 open UI
 open System
 
-let private moveCell xAdj yAdj g =
+type Direction =
+    | Up
+    | Down
+    | Left
+    | Right
+
+module private Direction =
+    let Get d amount = 
+        match d with 
+        | Up -> (0, amount)
+        | Down -> (0, amount * -1)
+        | Left -> (amount * -1, 0)
+        | Right -> (amount, 0)
+
+let private boundryCheck x y =
+    x < 9 && 
+    y < 9 &&
+    x > -1 &&
+    y > -1
+
+let rec private moveCell direction amount g =
     let x, y = g.ActiveCell
+    let xAdj, yAdj = Direction.Get direction amount
     let newX = x + xAdj
     let newY = y + yAdj
-    if newX < 9 && 
-        newY < 9 &&
-        newX > -1 &&
-        newY > -1   then 
-        Board.ChangeCellState x y Unselected g.Board
-        Board.ChangeCellState newX newY Selected g.Board
-        {g with 
-            ActiveCell = newX, newY
-            State = DrawBoard}
+    
+    if boundryCheck newX newY  then 
+        match  g.Board.[newX].[newY].CellState with  
+        | Given ->  
+            let incr = amount + 1
+            moveCell direction incr g
+        | _ ->
+            Board.ChangeCellState x y Unselected g.Board
+            Board.ChangeCellState newX newY Selected g.Board
+            {g with 
+                ActiveCell = newX, newY
+                State = DrawBoard}
     else
         {g with State = Running}
 
@@ -47,19 +71,19 @@ let private checkInput g input  =
     | ConsoleKey.K 
     | ConsoleKey.S
     | ConsoleKey.DownArrow  ->
-        moveCell 0 1 g
+        moveCell Down 1 g
     | ConsoleKey.I
     | ConsoleKey.W
     | ConsoleKey.UpArrow  ->
-        moveCell 0 -1 g
+        moveCell Up 1 g
     | ConsoleKey.J
     | ConsoleKey.A
     | ConsoleKey.LeftArrow  ->
-        moveCell -1 0 g
+        moveCell Left 1 g
     | ConsoleKey.L
     | ConsoleKey.D
     | ConsoleKey.RightArrow  ->
-        moveCell 1 0 g
+        moveCell Right 1 g
     | ConsoleKey.D0 -> 
         let r,c = g.ActiveCell
         Board.ChangeCellValue r c (Value 0) g.Board

@@ -43,25 +43,6 @@ let rec private moveCell direction amount g =
     else
         {g with State = Running}
 
-let rec private getValue() =
-    ConsoleOutput.DisplayMessage (0,14) "Enter a value 0 - 9"
-    let result = Console.ReadKey().Key
-    match result with
-    | ConsoleKey.D0
-    | ConsoleKey.D1
-    | ConsoleKey.D2
-    | ConsoleKey.D3
-    | ConsoleKey.D4
-    | ConsoleKey.D5
-    | ConsoleKey.D6
-    | ConsoleKey.D7
-    | ConsoleKey.D8
-    | ConsoleKey.D9 ->
-        printfn "valid key"
-    | _ ->
-        ConsoleOutput.DisplayMessage (0,14) "Enter a value 0 - 9"
-        getValue()
-
 let private checkInput g input  =
     match input with 
     | ConsoleKey.Escape -> 

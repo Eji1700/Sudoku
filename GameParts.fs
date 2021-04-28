@@ -25,29 +25,29 @@ module Cell =
         }
 
 module Rules =    
-    let private isUnique arr =
-        arr |> Array.distinct |> Array.length = (arr |> Array.length)
+    let private isUnique lst =
+        lst |> List.distinct |> List.length = (lst |> List.length)
 
-    let private noEmpty arr =
-        arr
-        |> Array.map (fun cell -> cell.Value) 
-        |> Array.contains Empty 
+    let private noEmpty lst =
+        lst
+        |> List.map (fun cell -> cell.Value) 
+        |> List.contains Empty 
         |> not
 
-    let Correct arr =
-        isUnique arr && noEmpty arr
+    let Correct lst =
+        isUnique lst && noEmpty lst
 
 type Position = Top | Middle | Bottom
-type Row = Cell []
-type Column = Cell []
+type Row = Cell list
+type Column = Cell list
 
-type Board = Row []
+type Board = Row list
 module Board  =
-    let Create arr : Board =
-        arr
-        |> Array.map( fun r ->
+    let Create lst : Board =
+        lst
+        |> List.map( fun r ->
             r
-            |> Array.map (fun c->
+            |> List.map (fun c->
                 if c = 0 then 
                     Cell.Create Unselected c
                 else
@@ -57,7 +57,7 @@ module Board  =
         
     let GetColumn col (board:Board) : Column  =
         [|0..8|]
-        |> Array.map(fun i -> board.[i].[col])
+        |> List.map(fun i -> board.[i].[col])
 
     let GetRow row (board:Board) : Row =
         board.[row]
@@ -83,7 +83,7 @@ module Grid =
 
     let Correct (g:Grid) =
         g
-        |> Array.concat
+        |> List.concat
         |> Rules.Correct
 
     let AllGrids (b:Board) =

@@ -56,17 +56,44 @@ module Board  =
         )
         
     let GetColumn col (board:Board) : Column  =
-        [|0..8|]
+        [0..8]
         |> List.map(fun i -> board.[i].[col])
 
     let GetRow row (board:Board) : Row =
         board.[row]
        
-    let ChangeCellState row column state (board:Board) =
-        board.[column].[row] <- {board.[column].[row] with CellState = state}
+    let ChangeCellState row column state (board:Board): Board =
+        let currRow = board.[row]
+        let setAt i x lst =
+            if List.length lst > i && i >= 0 then
+                lst.[0..i-1] @ x::lst.[i+1..]
+            else lst
+        let newCell = {board.[column].[row] with CellState = state}
+        let newRow = setAt column newCell currRow
+        let newBoard = setAt row newRow board
+        newBoard
 
-    let ChangeCellValue row column value (board:Board) =
-        board.[column].[row] <- {board.[column].[row] with Value = value}
+    let ChangeCellValue row column value (board:Board): Board =
+        let currRow = board.[row]
+        let setAt i x lst =
+            if List.length lst > i && i >= 0 then
+                lst.[0..i-1] @ x::lst.[i+1..]
+            else lst
+        let newCell = {board.[column].[row] with Value = value}
+        let newRow = setAt column newCell currRow
+        let newBoard = setAt row newRow board
+        newBoard
+
+    let ChangeBoth row column state value (board:Board): Board =
+        let currRow = board.[row]
+        let setAt i x lst =
+            if List.length lst > i && i >= 0 then
+                lst.[0..i-1] @ x::lst.[i+1..]
+            else lst
+        let newCell = {board.[column].[row] with  Value = value; CellState = state}
+        let newRow = setAt column newCell currRow
+        let newBoard = setAt row newRow board
+        newBoard
 
     let Validate f idx (board:Board) =
         f idx board
@@ -87,7 +114,7 @@ module Grid =
         |> Rules.Correct
 
     let AllGrids (b:Board) =
-        [|
+        [
             0,0
             0,3
             0,6
@@ -97,8 +124,8 @@ module Grid =
             6,0
             6,3
             6,6
-        |]
-        |> Array.map(fun coords -> Get coords b)
+        ]
+        |> List.map(fun coords -> Get coords b)
 
 type State =
     | EnterData
@@ -132,7 +159,7 @@ module Game =
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (
             Grid.AllGrids g.Board
-            |> Array.map Grid.Correct
-            |> Array.distinct
-            |> Array.length = 1
+            |> List.map Grid.Correct
+            |> List.distinct
+            |> List.length = 1
             )

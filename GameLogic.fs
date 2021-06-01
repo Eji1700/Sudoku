@@ -44,6 +44,12 @@ let rec private moveCell direction amount g =
     else
         {g with State = Running}
 
+let private cellChange v g =
+    let r,c = g.ActiveCell
+    {g with 
+        Board = Board.ChangeCellValue r c (Value v) g.Board
+        State = DrawBoard}  
+
 let private checkInput g input  =
     match input with 
     | ConsoleKey.Escape -> 
@@ -67,55 +73,25 @@ let private checkInput g input  =
     | ConsoleKey.RightArrow  ->
         moveCell Right 1 g
     | ConsoleKey.D0 -> 
-        let r,c = g.ActiveCell
-        {g with
-            Board = Board.ChangeCellValue r c (Value 0) g.Board
-            State = DrawBoard}   
+        cellChange 0 g 
     | ConsoleKey.D1 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 1) g.Board
-            State = DrawBoard}   
+        cellChange 1 g  
     | ConsoleKey.D2 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 2) g.Board
-            State = DrawBoard}   
+        cellChange 2 g   
     | ConsoleKey.D3 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 3) g.Board
-            State = DrawBoard}   
+        cellChange 3 g   
     | ConsoleKey.D4 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 4) g.Board
-            State = DrawBoard}   
+        cellChange 4 g  
     | ConsoleKey.D5 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 5) g.Board
-            State = DrawBoard}   
+        cellChange 5 g   
     | ConsoleKey.D6 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 6) g.Board
-            State = DrawBoard} 
+        cellChange 6 g 
     | ConsoleKey.D7 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 7) g.Board
-            State = DrawBoard} 
+        cellChange 7 g  
     | ConsoleKey.D8 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board = Board.ChangeCellValue r c (Value 8) g.Board
-            State = DrawBoard} 
+        cellChange 8 g 
     | ConsoleKey.D9 ->
-        let r,c = g.ActiveCell
-        {g with 
-            Board =  Board.ChangeCellValue r c (Value 9) g.Board
-            State = DrawBoard} 
+        cellChange 9 g 
     | _ -> g 
 
 let rec GameLoop (g: Game) =

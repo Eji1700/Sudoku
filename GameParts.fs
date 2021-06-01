@@ -46,11 +46,10 @@ module Board  =
             match c with 
             | 0 -> Cell.Create Unselected 0
             | _ when c < 0 -> Cell.Create Unselected 0
-            | _ -> Cell.Create Given c
-        )
+            | _ -> Cell.Create Given c )
         
     let GetColumn col (board:Board) : Column  =
-        board.[*,col]
+        board.[*, col]
 
     let GetRow row (board:Board) : Row =
         board.[row, *]
@@ -61,8 +60,7 @@ module Board  =
             if r = row && c = column then 
                 {cell with CellState = state}
             else
-                cell
-        )
+                cell )
 
     let ChangeCellValue row column value (board:Board): Board =
         board
@@ -70,8 +68,7 @@ module Board  =
             if r = row && c = column then 
                 {cell with Value = value}
             else
-                cell
-        )
+                cell )
 
     let ChangeBoth row column state value (board:Board): Board =
         board
@@ -79,8 +76,7 @@ module Board  =
             if r = row && c = column then 
                 {cell with Value = value; CellState = state}
             else
-                cell
-        )
+                cell )
 
     let Validate f idx (board:Board) =
         f idx board
@@ -130,7 +126,6 @@ type Game =
 
 module Game =
     let private rulesCheck f (g: Game)=
-        //Need to check for empty/0 cells
         [|0..8|]
         |> Array.map (fun i -> Board.Validate f i g.Board)
         |> Array.filter (fun v -> v = false) 

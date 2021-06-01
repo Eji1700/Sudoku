@@ -43,7 +43,7 @@ module ConsoleOutput =
 
     let private printRow (r:Row) =
         r
-        |> List.iter printCell
+        |> Array.iter printCell
 
     let private showRow ((r:Row), p) =
         match p with

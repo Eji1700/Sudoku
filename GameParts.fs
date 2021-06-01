@@ -13,87 +13,74 @@ type CellState =
 
 type Cell =
     {   Value: CellValue
-        CellState: CellState
-    } 
+        CellState: CellState } 
     
 module Cell =
     let Create s v= 
-        let value =
-            if v = 0  then Empty else Value v
+        let value = if v = 0 then Empty else Value v
         {   Value = value
-            CellState = s 
-        }
+            CellState = s }
 
 module Rules =    
-    let private isUnique lst =
-        lst |> List.distinct |> List.length = (lst |> List.length)
+    let private isUnique arr =
+        arr |> Array.distinct |> Array.length = (arr |> Array.length)
 
-    let private noEmpty lst =
-        lst
-        |> List.map (fun cell -> cell.Value) 
-        |> List.contains Empty 
+    let private noEmpty arr =
+        arr
+        |> Array.map (fun cell -> cell.Value) 
+        |> Array.contains Empty 
         |> not
 
-    let Correct lst =
-        isUnique lst && noEmpty lst
+    let Correct arr =
+        isUnique arr && noEmpty arr
 
 type Position = Top | Middle | Bottom
-type Row = Cell list
-type Column = Cell list
+type Row = Cell[]
+type Column = Cell[]
 
-type Board = Row list
+type Board = Cell[,]
 module Board  =
-    let Create lst : Board =
-        lst
-        |> List.map( fun r ->
-            r
-            |> List.map (fun c->
-                if c = 0 then 
-                    Cell.Create Unselected c
-                else
-                    Cell.Create Given c
-            )
+    let Create arr : Board =
+        arr
+        |> Array2D.map( fun c ->
+            match c with 
+            | 0 -> Cell.Create Unselected 0
+            | _ when c < 0 -> Cell.Create Unselected 0
+            | _ -> Cell.Create Given c
         )
         
     let GetColumn col (board:Board) : Column  =
-        [0..8]
-        |> List.map(fun i -> board.[i].[col])
+        board.[*,col]
 
     let GetRow row (board:Board) : Row =
-        board.[row]
+        board.[row, *]
        
     let ChangeCellState row column state (board:Board): Board =
-        let currRow = board.[row]
-        let setAt i x lst =
-            if List.length lst > i && i >= 0 then
-                lst.[0..i-1] @ x::lst.[i+1..]
-            else lst
-        let newCell = {board.[column].[row] with CellState = state}
-        let newRow = setAt column newCell currRow
-        let newBoard = setAt row newRow board
-        newBoard
+        board
+        |> Array2D.mapi(fun r c cell ->
+            if r = row && c = column then 
+                {cell with CellState = state}
+            else
+                cell
+        )
 
     let ChangeCellValue row column value (board:Board): Board =
-        let currRow = board.[row]
-        let setAt i x lst =
-            if List.length lst > i && i >= 0 then
-                lst.[0..i-1] @ x::lst.[i+1..]
-            else lst
-        let newCell = {board.[column].[row] with Value = value}
-        let newRow = setAt column newCell currRow
-        let newBoard = setAt row newRow board
-        newBoard
+        board
+        |> Array2D.mapi(fun r c cell ->
+            if r = row && c = column then 
+                {cell with Value = value}
+            else
+                cell
+        )
 
     let ChangeBoth row column state value (board:Board): Board =
-        let currRow = board.[row]
-        let setAt i x lst =
-            if List.length lst > i && i >= 0 then
-                lst.[0..i-1] @ x::lst.[i+1..]
-            else lst
-        let newCell = {board.[column].[row] with  Value = value; CellState = state}
-        let newRow = setAt column newCell currRow
-        let newBoard = setAt row newRow board
-        newBoard
+        board
+        |> Array2D.mapi(fun r c cell ->
+            if r = row && c = column then 
+                {cell with Value = value; CellState = state}
+            else
+                cell
+        )
 
     let Validate f idx (board:Board) =
         f idx board
@@ -103,18 +90,18 @@ type Grid = Row []
 module Grid =
     let Get (row,col) (board:Board) : Grid =
         [|
-            board.[row].[col..col+2] 
-            board.[row+1].[col..col+2] 
-            board.[row+2].[col..col+2] 
+            board.[row, col..col+2] 
+            board.[row+1, col..col+2] 
+            board.[row+2, col..col+2] 
         |]
 
     let Correct (g:Grid) =
         g
-        |> List.concat
+        |> Array.concat
         |> Rules.Correct
 
     let AllGrids (b:Board) =
-        [
+        [|
             0,0
             0,3
             0,6
@@ -124,8 +111,8 @@ module Grid =
             6,0
             6,3
             6,6
-        ]
-        |> List.map(fun coords -> Get coords b)
+        |]
+        |> Array.map(fun coords -> Get coords b)
 
 type State =
     | EnterData
@@ -139,7 +126,7 @@ type State =
 type Game = 
     {   Board: Board
         State: State
-        ActiveCell: int * int}
+        ActiveCell: int * int }
 
 module Game =
     let private rulesCheck f (g: Game)=
@@ -159,7 +146,7 @@ module Game =
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (
             Grid.AllGrids g.Board
-            |> List.map Grid.Correct
-            |> List.distinct
-            |> List.length = 1
+            |> Array.map Grid.Correct
+            |> Array.distinct
+            |> Array.length = 1
             )

@@ -8,5 +8,6 @@ let main argv =
     // | [||] -> ()
     // | _ -> 
     //     UI.ConsoleOutput.Init()
+    
     GameLoop Initial.Game
     0

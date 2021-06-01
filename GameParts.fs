@@ -136,7 +136,6 @@ module Game =
 
     let CheckSolution (g:Game) =
         //Result pattern?
-        //Need to check for empty/0 cells
         rulesCheck Board.GetRow g
         |> trueBind (rulesCheck Board.GetColumn g)
         |> trueBind (

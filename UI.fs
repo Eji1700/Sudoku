@@ -71,6 +71,6 @@ module ConsoleOutput =
         |> Array.iter showRow
 
     let GameOver() =
-        printfn "Game Over, you win!"
-        printfn "Press enter to quit"
+        DisplayMessage (0,14) "Game Over, you win!" 
+        DisplayMessage (0,15) "Press enter to quit" 
         Console.ReadLine() |> ignore

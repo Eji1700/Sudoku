@@ -45,7 +45,7 @@ module Board  =
         |> Array2D.map( fun c ->
             match c with 
             | 0 -> Cell.Create Unselected 0
-            | _ when c < 0 -> Cell.Create Unselected 0
+            | _ when c < 0 || c > 9 -> Cell.Create Unselected 0
             | _ -> Cell.Create Given c )
         
     let GetColumn col (board:Board) : Column  =

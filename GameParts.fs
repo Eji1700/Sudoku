@@ -85,12 +85,8 @@ module Board  =
 type Grid = Cell[,]
 module Grid =
     let Get (row,col) (board:Board) : Grid  =
-        // [|
-        //     board.[row, col..col+2] 
-        //     board.[row+1, col..col+2] 
-        //     board.[row+2, col..col+2] 
-        // |]
         board.[row..row+2, col..col+2]
+
     let Correct (g:Grid) =
         [| g.[0,*]; g.[1,*]; g.[2,*] |]
         |> Array.concat
@@ -142,5 +138,4 @@ module Game =
             Grid.AllGrids g.Board
             |> Array.map Grid.Correct
             |> Array.distinct
-            |> Array.length = 1
-            )
+            |> Array.length = 1)

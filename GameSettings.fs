@@ -19,4 +19,4 @@ module Initial =
   let Game = 
     { Board = board 
       State = StartGame
-      ActiveCell = 0,1}
+      ActiveCell = 0,1 }

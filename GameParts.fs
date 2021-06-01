@@ -82,17 +82,17 @@ module Board  =
         f idx board
         |> Rules.Correct
 
-type Grid = Row []
+type Grid = Cell[,]
 module Grid =
-    let Get (row,col) (board:Board) : Grid =
-        [|
-            board.[row, col..col+2] 
-            board.[row+1, col..col+2] 
-            board.[row+2, col..col+2] 
-        |]
-
+    let Get (row,col) (board:Board) : Grid  =
+        // [|
+        //     board.[row, col..col+2] 
+        //     board.[row+1, col..col+2] 
+        //     board.[row+2, col..col+2] 
+        // |]
+        board.[row..row+2, col..col+2]
     let Correct (g:Grid) =
-        g
+        [| g.[0,*]; g.[1,*]; g.[2,*] |]
         |> Array.concat
         |> Rules.Correct
 

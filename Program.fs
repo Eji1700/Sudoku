@@ -3,7 +3,7 @@ open GameLogic
 
 [<EntryPoint>]
 let main argv =
-    UI.ConsoleOutput.Init() //remove me
+    UI.ConsoleOutput.Init() //remove me and put in argu console parsing?
     // match argv with
     // | [||] -> ()
     // | _ -> 

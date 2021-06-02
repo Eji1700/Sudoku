@@ -43,10 +43,9 @@ module Board  =
     let Create arr : Board =
         arr
         |> Array2D.map( fun c ->
-            match c with 
-            | 0 -> Cell.Create Unselected 0
-            | _ when c < 0 || c > 9 -> Cell.Create Unselected 0
-            | _ -> Cell.Create Given c )
+            if c = 0 then Cell.Create Unselected 0
+            elif c < 0 || c > 9 then Cell.Create Unselected 0
+            else Cell.Create Given c )
         
     let GetColumn col (board:Board) : Column  =
         board.[*, col]

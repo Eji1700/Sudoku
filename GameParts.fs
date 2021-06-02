@@ -57,26 +57,27 @@ module Board  =
     let ChangeCellState row column state (board:Board): Board =
         board
         |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then 
-                {cell with CellState = state}
-            else
-                cell )
+            if r = row && c = column then {cell with CellState = state}
+            else cell )
+
+    let ChangeCellStateMove (row, newRow) (column, newColumn) (board:Board): Board =
+        board
+        |> Array2D.mapi(fun r c cell ->
+            if r = row && c = column then { cell with CellState = Unselected }
+            elif r = newRow && c = newColumn then { cell with CellState = Selected }
+            else cell )
 
     let ChangeCellValue row column value (board:Board): Board =
         board
         |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then 
-                {cell with Value = value}
-            else
-                cell )
+            if r = row && c = column then {cell with Value = value}
+            else cell )
 
     let ChangeBoth row column state value (board:Board): Board =
         board
         |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then 
-                {cell with Value = value; CellState = state}
-            else
-                cell )
+            if r = row && c = column then {cell with Value = value; CellState = state}
+            else cell )
 
     let Validate f idx (board:Board) =
         f idx board
@@ -125,17 +126,26 @@ module Game =
         [|0..8|]
         |> Array.map (fun i -> Board.Validate f i g.Board)
         |> Array.filter (fun v -> v = false) 
-        |> (fun arr -> arr.Length = 0)
+        //|> (fun arr -> arr.Length = 0)
+        |> fun arr ->
+            match arr.Length with 
+            | 0 -> Ok g
+            | _ -> Error g
 
-    let private trueBind f x =
-        if x then f else false
+    let private rulesCheckGrid (g: Game)=
+        Grid.AllGrids g.Board
+        |> Array.map Grid.Correct
+            |> Array.distinct
+            |> fun arr ->
+                match arr.Length with 
+                | 1 -> Ok g
+                | _ -> Error g
 
     let CheckSolution (g:Game) =
-        //Result pattern?
         rulesCheck Board.GetRow g
-        |> trueBind (rulesCheck Board.GetColumn g)
-        |> trueBind (
-            Grid.AllGrids g.Board
-            |> Array.map Grid.Correct
-            |> Array.distinct
-            |> Array.length = 1)
+        |> Result.bind (rulesCheck Board.GetColumn)
+        |> Result.bind (rulesCheckGrid)
+        |> fun r ->
+            match r with 
+            | Ok g -> true
+            | Error g -> false

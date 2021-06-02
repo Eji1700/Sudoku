@@ -36,61 +36,64 @@ let rec private moveCell direction amount g =
             moveCell direction incr g
         | _ ->
             let newestBoard = Board.ChangeCellStateMove (x,newX) (y,newY) g.Board
-            {g with 
+            { g with 
                 Board = newestBoard
                 ActiveCell = newX, newY
-                State = DrawBoard}
-    else
-        {g with State = Running}
+                State = DrawBoard }
+    else { g with State = Running }
 
-let private cellChange v g =
+let private cellChange k g =
+    // uses consolekey enum. Top row 0 is 48-57, numpad 0 is 96.
+    let v = 
+        let num = int k
+        if num < 96 then num - 48
+        else num - 96 
     let r,c = g.ActiveCell
-    {g with 
+    { g with 
         Board = Board.ChangeCellValue r c (Value v) g.Board
-        State = DrawBoard}  
+        State = DrawBoard }  
 
 let private checkInput g input  =
     match input with 
-    | ConsoleKey.Escape -> 
-        {g with State = Quit}
-    | ConsoleKey.Spacebar ->
-        {g with State = CheckData}
+    | ConsoleKey.Escape -> { g with State = Quit }
+    | ConsoleKey.Spacebar -> { g with State = CheckData }
+
     | ConsoleKey.K 
     | ConsoleKey.S
-    | ConsoleKey.DownArrow  ->
-        moveCell Down 1 g
+    | ConsoleKey.DownArrow -> moveCell Down 1 g
+
     | ConsoleKey.I
     | ConsoleKey.W
-    | ConsoleKey.UpArrow  ->
-        moveCell Up 1 g
+    | ConsoleKey.UpArrow -> moveCell Up 1 g
+
     | ConsoleKey.J
     | ConsoleKey.A
-    | ConsoleKey.LeftArrow  ->
-        moveCell Left 1 g
+    | ConsoleKey.LeftArrow -> moveCell Left 1 g
+
     | ConsoleKey.L
     | ConsoleKey.D
-    | ConsoleKey.RightArrow  ->
-        moveCell Right 1 g
-    | ConsoleKey.D0 -> 
-        cellChange 0 g 
-    | ConsoleKey.D1 ->
-        cellChange 1 g  
-    | ConsoleKey.D2 ->
-        cellChange 2 g   
-    | ConsoleKey.D3 ->
-        cellChange 3 g   
-    | ConsoleKey.D4 ->
-        cellChange 4 g  
-    | ConsoleKey.D5 ->
-        cellChange 5 g   
-    | ConsoleKey.D6 ->
-        cellChange 6 g 
-    | ConsoleKey.D7 ->
-        cellChange 7 g  
-    | ConsoleKey.D8 ->
-        cellChange 8 g 
-    | ConsoleKey.D9 ->
-        cellChange 9 g 
+    | ConsoleKey.RightArrow -> moveCell Right 1 g
+
+    | ConsoleKey.D0 
+    | ConsoleKey.NumPad0
+    | ConsoleKey.D1 
+    | ConsoleKey.NumPad1 
+    | ConsoleKey.D2  
+    | ConsoleKey.NumPad2  
+    | ConsoleKey.D3   
+    | ConsoleKey.NumPad3   
+    | ConsoleKey.D4  
+    | ConsoleKey.NumPad4  
+    | ConsoleKey.D5   
+    | ConsoleKey.NumPad5   
+    | ConsoleKey.D6  
+    | ConsoleKey.NumPad6  
+    | ConsoleKey.D7  
+    | ConsoleKey.NumPad7  
+    | ConsoleKey.D8 
+    | ConsoleKey.NumPad8 
+    | ConsoleKey.D9
+    | ConsoleKey.NumPad9 as k -> cellChange k g 
     | _ -> g 
 
 let rec GameLoop (g: Game) =
@@ -99,33 +102,31 @@ let rec GameLoop (g: Game) =
         ConsoleOutput.DisplayMessage (0,0) "Press enter to continue. While playing ESC to quit and Space to check your answer"
         Console.ReadLine() |> ignore
         Console.Clear()
-        GameLoop {g with State = DrawBoard}
+        GameLoop { g with State = DrawBoard }
+        
     | EnterData -> () //change if want to not be unit
     | CheckData ->
         ConsoleOutput.DrawBoard g
+
         let s =  Game.CheckSolution g
-        sprintf "Correct?: %b" s
-        |> ConsoleOutput.DisplayMessage (0,14)
-        if s then 
-            {g with State = GameOver}
-            |> GameLoop
+        sprintf "Correct?: %b" s |> ConsoleOutput.DisplayMessage (0,14)
+
+        if s then { g with State = GameOver } |> GameLoop
         else
             ConsoleOutput.DisplayMessage (0,15) "Incorrect, keep trying"
-            {g with State = Running}
-            |> GameLoop
+            { g with State = Running } |> GameLoop
+
     | DrawBoard ->
         ConsoleOutput.DrawBoard g
-        GameLoop {g with State = Running}
+        GameLoop { g with State = Running }
+
     | Running -> 
         let r = Console.KeyAvailable
-        if r |> not then
-            {g with State = Running}
-            |> GameLoop
+        if r |> not then { g with State = Running } |> GameLoop
         else
             Console.ReadKey(true).Key
             |> checkInput g
             |> GameLoop
-    | GameOver -> 
-        ConsoleOutput.GameOver() //change if want to not be unit
-    | Quit ->
-        () //change if want to not be unit
+
+    | GameOver -> ConsoleOutput.GameOver() //change if want to not be unit
+    | Quit -> () //change if want to not be unit

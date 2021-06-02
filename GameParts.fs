@@ -125,7 +125,6 @@ module Game =
         [|0..8|]
         |> Array.map (fun i -> Board.Validate f i g.Board)
         |> Array.filter (fun v -> v = false) 
-        //|> (fun arr -> arr.Length = 0)
         |> fun arr ->
             match arr.Length with 
             | 0 -> Ok g
@@ -146,5 +145,5 @@ module Game =
         |> Result.bind (rulesCheckGrid)
         |> fun r ->
             match r with 
-            | Ok g -> true
-            | Error g -> false
+            | Ok _ -> true
+            | Error _ -> false

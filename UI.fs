@@ -11,14 +11,10 @@ module ConsoleOutput =
     let private checkCellColor c =
         let b, f = Console.BackgroundColor, Console.ForegroundColor
         match c.CellState with
-        | Selected -> 
-            setColor ConsoleColor.White ConsoleColor.Black
-        | Marked ->
-            setColor ConsoleColor.DarkGreen ConsoleColor.White
-        | Given ->
-            setColor ConsoleColor.White ConsoleColor.DarkRed
-        | Wrong ->
-            setColor ConsoleColor.DarkRed ConsoleColor.White
+        | Selected -> setColor ConsoleColor.White ConsoleColor.Black
+        | Marked -> setColor ConsoleColor.DarkGreen ConsoleColor.White
+        | Given -> setColor ConsoleColor.White ConsoleColor.DarkRed
+        | Wrong -> setColor ConsoleColor.DarkRed ConsoleColor.White
         | Unselected -> ()
         b, f
 

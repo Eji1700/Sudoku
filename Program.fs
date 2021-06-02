@@ -9,12 +9,14 @@ let main argv =
     // | _ -> 
     //     UI.ConsoleOutput.Init()
     
+    GameLoop Initial.Game
+    // |> printfn "%A"
+    0
+
     // todo
     // Marked/Wrong options
     // Mark cell for testing with m
     // Highlight all errors on solution check, clear with e?
-    // Result patttern instead of true bind
     // Dear god the Console UI
     // At least need a "clear line" function to help blank things out
-    GameLoop Initial.Game
-    0
+    // Argu integration and eventually real frontend.

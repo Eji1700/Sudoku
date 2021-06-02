@@ -35,8 +35,7 @@ let rec private moveCell direction amount g =
             let incr = amount + 1
             moveCell direction incr g
         | _ ->
-            let newBoard = Board.ChangeCellState x y Unselected g.Board
-            let newestBoard = Board.ChangeCellState newX newY Selected newBoard
+            let newestBoard = Board.ChangeCellStateMove (x,newX) (y,newY) g.Board
             {g with 
                 Board = newestBoard
                 ActiveCell = newX, newY
@@ -101,10 +100,10 @@ let rec GameLoop (g: Game) =
         Console.ReadLine() |> ignore
         Console.Clear()
         GameLoop {g with State = DrawBoard}
-    | EnterData -> ()
+    | EnterData -> () //change if want to not be unit
     | CheckData ->
-        let s =  Game.CheckSolution g
         ConsoleOutput.DrawBoard g
+        let s =  Game.CheckSolution g
         sprintf "Correct?: %b" s
         |> ConsoleOutput.DisplayMessage (0,14)
         if s then 
@@ -127,6 +126,6 @@ let rec GameLoop (g: Game) =
             |> checkInput g
             |> GameLoop
     | GameOver -> 
-        ConsoleOutput.GameOver()
+        ConsoleOutput.GameOver() //change if want to not be unit
     | Quit ->
-        ()
+        () //change if want to not be unit

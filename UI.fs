@@ -31,8 +31,7 @@ module ConsoleOutput =
         setColor b f 
 
     let private printRow (r:Row) =
-        r
-        |> Array.iter printCell
+        r |> Array.iter printCell
 
     let private showRow ((r:Row), p) =
         match p with

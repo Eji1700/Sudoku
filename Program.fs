@@ -13,4 +13,5 @@ let main argv =
     // Highlight all errors on solution check, clear with e?
     // Dear god the Console UI
     // At least need a "clear line" function to help blank things out
-    // Argu integration and eventually real frontend.s
+    // Argu integration and eventually real frontend.
+    // Dynamic active starting cell so as not to screw up puzzles

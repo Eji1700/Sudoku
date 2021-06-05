@@ -8,13 +8,18 @@ module ConsoleOutput =
         Console.BackgroundColor <- background
         Console.ForegroundColor <- foreground
 
+    let private White = ConsoleColor.White
+    let private Black = ConsoleColor.Black
+    let private Green = ConsoleColor.DarkGreen
+    let private Red = ConsoleColor.DarkRed
+
     let private checkCellColor c =
         let b, f = Console.BackgroundColor, Console.ForegroundColor
         match c.CellState with
-        | Selected -> setColor ConsoleColor.White ConsoleColor.Black
-        | Marked -> setColor ConsoleColor.DarkGreen ConsoleColor.White
-        | Given -> setColor ConsoleColor.White ConsoleColor.DarkRed
-        | Wrong -> setColor ConsoleColor.DarkRed ConsoleColor.White
+        | Selected -> setColor White Black
+        | Marked -> setColor Green White
+        | Given -> setColor White Red
+        | Wrong -> setColor Red White
         | Unselected -> ()
         b, f
 

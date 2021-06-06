@@ -8,6 +8,7 @@ let main argv =
     0
 
     // todo
+    // Redo types to prevent bad states.
     // Marked/Wrong options
     // Mark cell for testing with m
     // Highlight all errors on solution check, clear with e?

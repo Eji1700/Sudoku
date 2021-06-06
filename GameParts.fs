@@ -1,25 +1,61 @@
 namespace GameParts
+open System
 
-type CellValue =
-    | Value of int
-    | Empty
+type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
+module Value =
+    let ConvertKey k =
+        match k with
+        | ConsoleKey.D1
+        | ConsoleKey.NumPad1 -> Some V1
+        | ConsoleKey.D2
+        | ConsoleKey.NumPad2 -> Some V2
+        | ConsoleKey.D3
+        | ConsoleKey.NumPad3 -> Some V3
+        | ConsoleKey.D4
+        | ConsoleKey.NumPad4 -> Some V4
+        | ConsoleKey.D5
+        | ConsoleKey.NumPad5 -> Some V5
+        | ConsoleKey.D6
+        | ConsoleKey.NumPad6 -> Some V6
+        | ConsoleKey.D7
+        | ConsoleKey.NumPad7 -> Some V7
+        | ConsoleKey.D8
+        | ConsoleKey.NumPad8 -> Some V8
+        | ConsoleKey.D9
+        | ConsoleKey.NumPad9 -> Some V9
+        | _ -> None
 
-type CellState =
-    | Marked
-    | Given
-    | Wrong
-    | Unselected
-    | Selected
+    let ConvertInt i =
+        match i with 
+        | Some 1 -> Some V1
+        | Some 2 -> Some V2
+        | Some 3 -> Some V3
+        | Some 4 -> Some V4
+        | Some 5 -> Some V5
+        | Some 6 -> Some V6
+        | Some 7 -> Some V7
+        | Some 8 -> Some V8
+        | Some 9 -> Some V9
+        | _ -> None
 
 type Cell =
-    {   Value: CellValue
-        CellState: CellState } 
-    
+    | SelectedMarked of Value option 
+    | UnselectedMarked of Value option 
+    | SelectedWrong of Value option
+    | UnselectedWrong of Value option
+    | Selected of Value option
+    | Unselected of Value option
+    | Given of Value
+    | SelectedEmpty
+    | UnselectedEmpty
+
 module Cell =
-    let Create s v= 
-        let value = if v = 0 then Empty else Value v
-        {   Value = value
-            CellState = s }
+    let Create  v =
+        match Value.ConvertInt v with 
+        | Some v -> Given v
+        | _ -> UnselectedEmpty  
+
+    let testCell = Selected (Some V9) 
 
 module Rules =    
     let private isUnique arr =
@@ -27,8 +63,7 @@ module Rules =
 
     let private noEmpty arr =
         arr
-        |> Array.map (fun cell -> cell.Value) 
-        |> Array.contains Empty 
+        |> Array.exists (fun c ->  c = UnselectedEmpty || c = SelectedEmpty)
         |> not
 
     let Correct arr =
@@ -41,11 +76,7 @@ type Column = Cell[]
 type Board = Cell[,]
 module Board  =
     let Create arr : Board =
-        arr
-        |> Array2D.map( fun c ->
-            if c = 0 then Cell.Create Unselected 0
-            elif c < 0 || c > 9 then Cell.Create Unselected 0
-            else Cell.Create Given c )
+        arr |> Array2D.map Cell.Create
         
     let GetColumn col (board:Board) : Column  =
         board.[*, col]
@@ -53,11 +84,11 @@ module Board  =
     let GetRow row (board:Board) : Row =
         board.[row, *]
        
-    let ChangeCellState row column state (board:Board): Board =
-        board
-        |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then {cell with CellState = state}
-            else cell )
+    // let ChangeCellState row column state (board:Board): Board =
+    //     board
+    //     |> Array2D.mapi(fun r c cell ->
+    //         if r = row && c = column then {cell with CellState = state}
+    //         else cell )
 
     let ChangeCellStateMove (row, newRow) (column, newColumn) (board:Board): Board =
         board

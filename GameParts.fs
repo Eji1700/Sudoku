@@ -39,6 +39,7 @@ module Value =
         | _ -> None
 
 type Cell =
+    // Allows for more thna one selected, wrong.
     | SelectedMarked of Value option 
     | UnselectedMarked of Value option 
     | SelectedWrong of Value option
@@ -54,8 +55,6 @@ module Cell =
         match Value.ConvertInt v with 
         | Some v -> Given v
         | _ -> UnselectedEmpty  
-
-    let testCell = Selected (Some V9) 
 
 module Rules =    
     let private isUnique arr =

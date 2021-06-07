@@ -38,23 +38,32 @@ module Value =
         | Some 9 -> Some V9
         | _ -> None
 
+type SelectableCell =
+    | Entered of Value option
+    | Marked of Value option  
+    | Wrong of Value option
+    | Empty
+
 type Cell =
-    // Allows for more thna one selected, wrong.
-    | SelectedMarked of Value option 
-    | UnselectedMarked of Value option 
-    | SelectedWrong of Value option
-    | UnselectedWrong of Value option
-    | Selected of Value option
-    | Unselected of Value option
     | Given of Value
-    | SelectedEmpty
-    | UnselectedEmpty
+    | SelectableCell of SelectableCell
 
 module Cell =
-    let Create  v =
-        match Value.ConvertInt v with 
+    let Create i =
+        match Value.ConvertInt i with 
         | Some v -> Given v
-        | _ -> UnselectedEmpty  
+        | _ -> SelectableCell Empty
+
+    let Mark (c: SelectableCell)  =
+        match c with 
+        | Marked v -> Entered v
+        | Wrong v -> Marked v
+        | Entered v -> Marked v
+        | Empty -> Empty
+
+type Cursor = int * int * SelectableCell 
+module Cursor =
+    let Move x y c : Cursor = x,y,c 
 
 module Rules =    
     let private isUnique arr =
@@ -62,11 +71,10 @@ module Rules =
 
     let private noEmpty arr =
         arr
-        |> Array.exists (fun c ->  c = UnselectedEmpty || c = SelectedEmpty)
+        |> Array.contains Empty
         |> not
 
-    let Correct arr =
-        isUnique arr && noEmpty arr
+    let Correct arr = isUnique arr && noEmpty arr
 
 type Position = Top | Middle | Bottom
 type Row = Cell[]

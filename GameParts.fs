@@ -27,21 +27,21 @@ module Value =
 
     let ConvertInt i =
         match i with 
-        | Some 1 -> Some V1
-        | Some 2 -> Some V2
-        | Some 3 -> Some V3
-        | Some 4 -> Some V4
-        | Some 5 -> Some V5
-        | Some 6 -> Some V6
-        | Some 7 -> Some V7
-        | Some 8 -> Some V8
-        | Some 9 -> Some V9
+        | 1 -> Some V1
+        | 2 -> Some V2
+        | 3 -> Some V3
+        | 4 -> Some V4
+        | 5 -> Some V5
+        | 6 -> Some V6
+        | 7 -> Some V7
+        | 8 -> Some V8
+        | 9 -> Some V9
         | _ -> None
 
 type SelectableCell =
-    | Entered of Value option
+    | Entered of Value
+    | Wrong of Value Option
     | Marked of Value option  
-    | Wrong of Value option
     | Empty
 
 type Cell =
@@ -50,16 +50,21 @@ type Cell =
 
 module Cell =
     let Create i =
-        match Value.ConvertInt i with 
-        | Some v -> Given v
-        | _ -> SelectableCell Empty
+        Option.bind Value.ConvertInt i  
+        |> fun v ->
+            match v with 
+            | Some v -> Given v
+            | None -> SelectableCell Empty
 
     let Mark (c: SelectableCell)  =
         match c with 
-        | Marked v -> Entered v
         | Wrong v -> Marked v
-        | Entered v -> Marked v
+        | Entered v -> Marked (Some v)
         | Empty -> Empty
+        | Marked v -> 
+            match v with 
+            | Some v -> Entered v
+            | None -> Empty
 
 type Cursor = int * int * SelectableCell 
 module Cursor =

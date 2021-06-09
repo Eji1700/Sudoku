@@ -38,35 +38,19 @@ module Value =
         | 9 -> Some V9
         | _ -> None
 
-type SelectableCell =
-    | Entered of Value
-    | Wrong of Value Option
-    | Marked of Value option  
-    | Empty
-
 type Cell =
+    | Entered of Value
     | Given of Value
-    | SelectableCell of SelectableCell
 
 module Cell =
     let Create i =
         Option.bind Value.ConvertInt i  
-        |> fun v ->
+        |> fun v -> 
             match v with 
-            | Some v -> Given v
-            | None -> SelectableCell Empty
+            | Some v -> v |> Given |> Some
+            | None -> None 
 
-    let Mark (c: SelectableCell)  =
-        match c with 
-        | Wrong v -> Marked v
-        | Entered v -> Marked (Some v)
-        | Empty -> Empty
-        | Marked v -> 
-            match v with 
-            | Some v -> Entered v
-            | None -> Empty
-
-type Cursor = int * int * SelectableCell 
+type Cursor = int * int * Cell 
 module Cursor =
     let Move x y c : Cursor = x,y,c 
 
@@ -76,56 +60,31 @@ module Rules =
 
     let private noEmpty arr =
         arr
-        |> Array.contains Empty
+        |> Array.contains None
         |> not
 
     let Correct arr = isUnique arr && noEmpty arr
 
 type Position = Top | Middle | Bottom
-type Row = Cell[]
-type Column = Cell[]
+type Row = Cell option []
+type Column = Cell option []
 
-type Board = Cell[,]
+type Board = Cell option [,] 
 module Board  =
     let Create arr : Board =
         arr |> Array2D.map Cell.Create
         
     let GetColumn col (board:Board) : Column  =
-        board.[*, col]
+        board.[*, col] 
 
     let GetRow row (board:Board) : Row =
         board.[row, *]
-       
-    // let ChangeCellState row column state (board:Board): Board =
-    //     board
-    //     |> Array2D.mapi(fun r c cell ->
-    //         if r = row && c = column then {cell with CellState = state}
-    //         else cell )
-
-    let ChangeCellStateMove (row, newRow) (column, newColumn) (board:Board): Board =
-        board
-        |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then { cell with CellState = Unselected }
-            elif r = newRow && c = newColumn then { cell with CellState = Selected }
-            else cell )
-
-    let ChangeCellValue row column value (board:Board): Board =
-        board
-        |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then {cell with Value = value}
-            else cell )
-
-    let ChangeBoth row column state value (board:Board): Board =
-        board
-        |> Array2D.mapi(fun r c cell ->
-            if r = row && c = column then {cell with Value = value; CellState = state}
-            else cell )
 
     let Validate f idx (board:Board) =
         f idx board
         |> Rules.Correct
 
-type Grid = Cell[,]
+type Grid = Cell option[,]
 module Grid =
     let Get (row,col) (board:Board) : Grid  =
         board.[row..row+2, col..col+2]
@@ -149,7 +108,7 @@ module Grid =
         |]
         |> Array.map(fun coords -> Get coords b)
 
-type State =
+type GameState =
     | EnterData
     | CheckData
     | StartGame
@@ -158,10 +117,17 @@ type State =
     | GameOver
     | Quit
 
+type Altered =
+    | Marked
+    | Wrong
+
+type AlteredCells = (int * int * Altered) list
+
 type Game = 
     {   Board: Board
-        State: State
-        ActiveCell: int * int }
+        State: GameState
+        Cursor: Cursor
+        Altered: AlteredCells}
 
 module Game =
     let private rulesCheck f (g: Game)=

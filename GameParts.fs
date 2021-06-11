@@ -50,10 +50,6 @@ module Cell =
             | Some v -> v |> Given |> Some
             | None -> None 
 
-type Cursor = int * int * Cell 
-module Cursor =
-    let Move x y c : Cursor = x,y,c 
-
 module Rules =    
     let private isUnique arr =
         arr |> Array.distinct |> Array.length = (arr |> Array.length)
@@ -67,6 +63,22 @@ module Rules =
 
 type Position = Top | Middle | Bottom
 type Row = Cell option []
+module Row =
+    let Wrong (r:Row) =
+        let empty =
+            r
+            |> Array.filter(fun c -> c = None)
+        
+        let duplicates =
+            r
+            |> Array.groupBy id
+            |> Array.choose(fun(key, arr) ->
+                if arr.Length > 1 
+                    then Some key
+                    else None
+            )
+        empty, duplicates
+        
 type Column = Cell option []
 
 type Board = Cell option [,] 
@@ -83,6 +95,28 @@ module Board  =
     let Validate f idx (board:Board) =
         f idx board
         |> Rules.Correct
+
+    let GetEmpty (b:Board) =
+        [|0..8|]
+        |> Array.map(fun x ->
+            GetRow x b
+            |> Array.mapi(fun i c -> 
+                match c with 
+                | None -> None
+                | Some _ -> Some i)
+        )
+        |> Array.mapi(fun x arr ->
+            arr
+            |> Array.mapi(fun y o ->
+                match o with
+                | None -> Some (x,y)
+                | Some _ -> None
+            )
+            |> Array.toList
+        )
+        |> Array.map(List.choose id)
+        |> Array.toList
+        |> List.concat
 
 type Grid = Cell option[,]
 module Grid =
@@ -122,6 +156,7 @@ type Altered =
     | Wrong
 
 type AlteredCells = (int * int * Altered) list
+type Cursor = int * int 
 
 type Game = 
     {   Board: Board
@@ -154,5 +189,5 @@ module Game =
         |> Result.bind (rulesCheckGrid)
         |> fun r ->
             match r with 
-            | Ok _ -> true
+            | Ok _ -> true //this eventually needs to be result all the way through
             | Error _ -> false

@@ -81,6 +81,9 @@ module Row =
         
 type Column = Cell option []
 
+module Array2D =
+    let toList (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toList
+
 type Board = Cell option [,] 
 module Board  =
     let Create arr : Board =
@@ -97,26 +100,14 @@ module Board  =
         |> Rules.Correct
 
     let GetEmpty (b:Board) =
-        [|0..8|]
-        |> Array.map(fun x ->
-            GetRow x b
-            |> Array.mapi(fun i c -> 
-                match c with 
-                | None -> None
-                | Some _ -> Some i)
+        b
+        |> Array2D.mapi(fun x y c ->
+            match c with 
+            | None -> Some (x, y)
+            | Some _ -> None
         )
-        |> Array.mapi(fun x arr ->
-            arr
-            |> Array.mapi(fun y o ->
-                match o with
-                | None -> Some (x,y)
-                | Some _ -> None
-            )
-            |> Array.toList
-        )
-        |> Array.map(List.choose id)
-        |> Array.toList
-        |> List.concat
+        |> Array2D.toList
+        |> List.choose id
 
 type Grid = Cell option[,]
 module Grid =

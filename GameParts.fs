@@ -112,10 +112,10 @@ module Board  =
         Grid.AllGrids
         |> Array.map (GetGrid b)
 
-    let private getDupes fa fb b =
+    let private getDupes get dupes b =
        [|0..8|]
-       |> Array.map (fa b)
-       |> Array.map fb
+       |> Array.map (get b)
+       |> Array.map dupes
        |> Array.toList
        |> List.concat
 

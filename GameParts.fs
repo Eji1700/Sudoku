@@ -1,6 +1,9 @@
 namespace GameParts
 open System
 
+module Array2D = 
+    let toList (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toList
+
 type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
 module Value =
     let ConvertKey k =
@@ -50,54 +53,93 @@ module Cell =
             | Some v -> v |> Given |> Some
             | None -> None 
 
-module Rules =    
-    let private isUnique arr =
-        arr |> Array.distinct |> Array.length = (arr |> Array.length)
-
-    let private noEmpty arr =
+module private Rules =    
+    let private duplicates f arr = 
         arr
-        |> Array.contains None
-        |> not
+        |> f
+        |> List.groupBy id
+        |> List.choose(fun(key, lst) ->
+            if lst.Length > 1 
+                then Some key
+                else None
+        )
 
-    let Correct arr = isUnique arr && noEmpty arr
+    let RowColDupes arr = duplicates Array.toList arr
+    let GridDupes arr = duplicates Array2D.toList arr 
 
 type Position = Top | Middle | Bottom
 type Row = Cell option []
 module Row =
-    let Wrong (r:Row) =
-        let empty =
-            r
-            |> Array.filter(fun c -> c = None)
-        
-        let duplicates =
-            r
-            |> Array.groupBy id
-            |> Array.choose(fun(key, arr) ->
-                if arr.Length > 1 
-                    then Some key
-                    else None
-            )
-        empty, duplicates
+    let Duplicates (r:Row) =
+        r |> Rules.RowColDupes
         
 type Column = Cell option []
+module Column =
+    let Duplicates (c:Column) =
+        c |> Rules.RowColDupes
 
-module Array2D =
-    let toList (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toList
+type Grid = Cell option[,]
+module Grid =
+    let Duplicates (g:Grid) =
+        g |> Rules.GridDupes
+
+    let AllGrids =
+        [|  0,0
+            0,3
+            0,6
+            3,0
+            3,3
+            3,6
+            6,0
+            6,3
+            6,6|]
+
+    // let Correct (g:Grid) =
+    //     [| g.[0,*]; g.[1,*]; g.[2,*] |]
+    //     |> Array.concat
+    //     |> Rules.Correct
 
 type Board = Cell option [,] 
 module Board  =
     let Create arr : Board =
         arr |> Array2D.map Cell.Create
         
-    let GetColumn col (board:Board) : Column  =
-        board.[*, col] 
-
-    let GetRow row (board:Board) : Row =
+    let GetRow (board:Board) row : Row =
         board.[row, *]
 
-    let Validate f idx (board:Board) =
-        f idx board
-        |> Rules.Correct
+    let GetColumn (board:Board) col : Column  =
+        board.[*, col] 
+
+    let GetGrid (board:Board) (row,col) : Grid =
+        board.[row..row+2, col..col+2]
+
+    let GetAllGrids b =
+        Grid.AllGrids
+        |> Array.map (GetGrid b)
+
+    let private getDupes f b =
+       [|0..8|]
+       |> Array.map (f b)
+       |> Array.map Rules.RowColDupes
+       |> Array.toList
+       |> List.concat
+
+    let private getRowDupes b =
+        getDupes GetRow b
+
+    let private getColDupes b =
+        getDupes GetColumn b
+
+    let private getGridDupes b =
+        b
+        |> GetAllGrids
+        |> Array.map Rules.GridDupes
+        |> Array.toList
+        |> List.concat
+
+    let GetDupes (b:Board) =
+        getRowDupes b @ getColDupes b @ getGridDupes b
+        |> List.distinct
 
     let GetEmpty (b:Board) =
         b
@@ -108,30 +150,11 @@ module Board  =
         )
         |> Array2D.toList
         |> List.choose id
+    
+    // let Validate f idx (board:Board) =
+    //     f idx board
+    //     |> Rules.Correct
 
-type Grid = Cell option[,]
-module Grid =
-    let Get (row,col) (board:Board) : Grid  =
-        board.[row..row+2, col..col+2]
-
-    let Correct (g:Grid) =
-        [| g.[0,*]; g.[1,*]; g.[2,*] |]
-        |> Array.concat
-        |> Rules.Correct
-
-    let AllGrids (b:Board) =
-        [|
-            0,0
-            0,3
-            0,6
-            3,0
-            3,3
-            3,6
-            6,0
-            6,3
-            6,6
-        |]
-        |> Array.map(fun coords -> Get coords b)
 
 type GameState =
     | EnterData
@@ -153,32 +176,41 @@ type Game =
     {   Board: Board
         State: GameState
         Cursor: Cursor
-        Altered: AlteredCells}
+        Empty: (int * int) list
+        Duplicates: (int * int) list}
 
 module Game =
-    let private rulesCheck f (g: Game)=
-        [|0..8|]
-        |> Array.map (fun i -> Board.Validate f i g.Board)
-        |> Array.filter (fun v -> v = false) 
-        |> fun arr ->
-            match arr.Length with 
-            | 0 -> Ok g
-            | _ -> Error g
+    let GetEmpty g =
+        {g with Empty = (Board.GetEmpty g.Board)}
 
-    let private rulesCheckGrid (g: Game)=
-        Grid.AllGrids g.Board
-        |> Array.map Grid.Correct
-            |> Array.distinct
-            |> fun arr ->
-                match arr.Length with 
-                | 1 -> Ok g
-                | _ -> Error g
+    let GetDupes g =
+        let dupes =
+            let r = 
+        
 
-    let CheckSolution (g:Game) =
-        rulesCheck Board.GetRow g
-        |> Result.bind (rulesCheck Board.GetColumn)
-        |> Result.bind (rulesCheckGrid)
-        |> fun r ->
-            match r with 
-            | Ok _ -> true //this eventually needs to be result all the way through
-            | Error _ -> false
+    // let private rulesCheck f (g: Game)=
+    //     [|0..8|]
+    //     |> Array.map (fun i -> Board.Validate f i g.Board)
+    //     |> Array.filter (fun v -> v = false) 
+    //     |> fun arr ->
+    //         match arr.Length with 
+    //         | 0 -> Ok g
+    //         | _ -> Error g
+
+    // let private rulesCheckGrid (g: Game)=
+    //     Grid.AllGrids g.Board
+    //     |> Array.map Grid.Correct
+    //         |> Array.distinct
+    //         |> fun arr ->
+    //             match arr.Length with 
+    //             | 1 -> Ok g
+    //             | _ -> Error g
+
+    // let CheckSolution (g:Game) =
+    //     rulesCheck Board.GetRow g
+    //     |> Result.bind (rulesCheck Board.GetColumn)
+    //     |> Result.bind (rulesCheckGrid)
+    //     |> fun r ->
+    //         match r with 
+    //         | Ok _ -> true //this eventually needs to be result all the way through
+    //         | Error _ -> false

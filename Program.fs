@@ -4,7 +4,9 @@ open GameLogic
 [<EntryPoint>]
 let main argv =
     UI.ConsoleOutput.Init() //remove me and put in argu console parsing?    
-    GameLoop Initial.Game
+    //GameLoop Initial.Game
+    GameParts.Board.GetDupes Initial.dupeBoard
+    |> printfn "%A"
     0
 
     // todo

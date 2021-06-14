@@ -74,13 +74,16 @@ module Duplicates =
     let getDupes f arr =
         arr
         |> f
-        |> List.groupBy id
-        |> List.choose(fun(k, lst) ->
-            let _,idx = k
-            if lst.Length > 1 
-                then Some idx
-                else None
+        |> List.groupBy(fun (c,_) -> c)
+        |> List.choose(fun(v, lst) ->
+            if lst.Length > 1 && v <> None
+            then 
+                lst
+                |> List.map (fun (_,idx) -> idx )
+                |> Some
+            else None
         )
+        |> List.concat
 
     let Row (r:Row) = 
         getDupes Array.toList r
@@ -132,7 +135,7 @@ module Board  =
         |> List.concat
 
     let GetDupes b =
-        getRowDupes b @ getColDupes b @ getGridDupes b
+        getRowDupes b
         |> List.distinct
 
     let GetEmpty (b:Board) =

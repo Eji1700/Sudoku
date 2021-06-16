@@ -2,7 +2,7 @@ namespace GameParts
 open System
 
 module Array2D = 
-    let toList (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toList
+    let toArray (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toArray
 
 type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
 module Value =
@@ -70,29 +70,29 @@ module Grid =
             6,3
             6,6|]
 
-module Duplicates =    
+module private Duplicates =    
     let private getDupes f arr =
         arr
-        |> f
-        |> List.groupBy(fun (c,_) -> c)
-        |> List.choose(fun(v, lst) ->
-            if lst.Length > 1 && v <> None
+        |> f //to allow grids to convert to array, just skipped otherwise with id call.
+        |> Array.groupBy(fun (c,_) -> c)
+        |> Array.choose(fun(v, arr) ->
+            if arr.Length > 1 && v <> None
             then 
-                lst
-                |> List.map (fun (_,idx) -> idx )
+                arr
+                |> Array.map (fun (_,idx) -> idx )
                 |> Some
             else None
         )
-        |> List.concat
+        |> Array.concat
 
     let Row (r:Row) = 
-        getDupes Array.toList r
+        getDupes id r
 
     let Column (c:Column) =
-        getDupes Array.toList c
+        getDupes id c
 
     let Grid (g:Grid) =
-        getDupes Array2D.toList g
+        getDupes Array2D.toArray g
 
 type Board = ((Cell option) * (Index)) [,] 
 module Board  =
@@ -126,8 +126,7 @@ module Board  =
     let private getDupes getall dupes b =
        getall b
        |> Array.map dupes
-       |> Array.toList
-       |> List.concat
+       |> Array.concat
 
     let private getRowDupes b =
         getDupes GetAllRows Duplicates.Row b
@@ -139,9 +138,11 @@ module Board  =
         getDupes GetAllGrids Duplicates.Grid b
 
     let GetDupes b =
-        getRowDupes b @ getColDupes b @ getGridDupes b
-        |> List.distinct
-
+        getRowDupes b 
+        |> Array.append(getColDupes b) 
+        |> Array.append(getGridDupes b)
+        |> Array.distinct
+        
     let GetEmpty (b:Board) =
         b
         |> Array2D.map(fun c ->
@@ -150,8 +151,8 @@ module Board  =
             | None -> Some i
             | Some _ -> None
         )
-        |> Array2D.toList
-        |> List.choose id
+        |> Array2D.toArray
+        |> Array.choose id
 
 type GameState =
     | EnterData
@@ -173,8 +174,8 @@ type Game =
     {   Board: Board
         State: GameState
         Cursor: Cursor
-        Empty: Index list
-        Duplicates: Index list}
+        Empty: Index []
+        Duplicates: Index []}
 
 module Game =
     let GetEmpty g =

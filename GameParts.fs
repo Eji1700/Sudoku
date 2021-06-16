@@ -71,7 +71,7 @@ module Grid =
             6,6|]
 
 module Duplicates =    
-    let getDupes f arr =
+    let private getDupes f arr =
         arr
         |> f
         |> List.groupBy(fun (c,_) -> c)
@@ -105,8 +105,16 @@ module Board  =
     let GetRow (board:Board) row : Row =
         board.[row, *]
 
+    let GetAllRows board =
+        [|0..8|]
+        |> Array.map (GetRow board)
+
     let GetColumn (board:Board) col : Column  =
         board.[*, col] 
+
+    let GetAllColumns board =
+        [|0..8|]
+        |> Array.map (GetColumn board)
 
     let GetGrid (board:Board) (row,col) : Grid =
         board.[row..row+2, col..col+2]
@@ -115,27 +123,23 @@ module Board  =
         Grid.AllGrids
         |> Array.map (GetGrid b)
 
-    let private getDupes get dupes b =
-       [|0..8|]
-       |> Array.map (get b)
+    let private getDupes getall dupes b =
+       getall b
        |> Array.map dupes
        |> Array.toList
        |> List.concat
 
-    let getRowDupes b =
-        getDupes GetRow Duplicates.Row b
+    let private getRowDupes b =
+        getDupes GetAllRows Duplicates.Row b
 
-    let getColDupes b =
-        getDupes GetColumn Duplicates.Column b
+    let private getColDupes b =
+        getDupes GetAllColumns Duplicates.Column b
 
-    let getGridDupes b =
-        GetAllGrids b
-        |> Array.map Duplicates.Grid
-        |> Array.toList
-        |> List.concat
+    let private getGridDupes b =
+        getDupes GetAllGrids Duplicates.Grid b
 
     let GetDupes b =
-        getRowDupes b
+        getRowDupes b @ getColDupes b @ getGridDupes b
         |> List.distinct
 
     let GetEmpty (b:Board) =

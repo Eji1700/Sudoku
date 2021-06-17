@@ -46,7 +46,7 @@ module Initial =
     |> array2D 
     |> Board.Create
 
-  // let Game = 
-  //   { Board = fileBoard 
-  //     State = StartGame
-  //     ActiveCell = 0,1 }
+  let Game = 
+    { Board = fileBoard 
+      State = StartGame
+      ActiveCell = 0,1 }

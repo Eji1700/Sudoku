@@ -47,6 +47,8 @@ module Initial =
         |> Board.Create
 
     let Game = 
-        { Board = fileBoard 
-        State = StartGame
-        ActiveCell = 0,1 }
+        {   Board = fileBoard 
+            State = StartGame
+            Cursor = 0,1 
+            EmptyCells = [||]
+            DuplicateCells = [||]}

@@ -42,7 +42,7 @@ module Initial =
 
         data
         |> Seq.map (fun line -> line.Split(","))
-        |> Seq.map( fun row -> row |> Array.map (fun s -> s |> int |> Some))
+        |> Seq.map(fun row -> row |> Array.map (fun s -> s |> int |> Some))
         |> array2D 
         |> Board.Create
 

@@ -142,6 +142,7 @@ module Board  =
         |> Array.append(getColDupes b) 
         |> Array.append(getGridDupes b)
         |> Array.distinct
+        |> Set.ofArray
         
     let GetEmpty (b:Board) =
         b
@@ -153,6 +154,7 @@ module Board  =
         )
         |> Array2D.toArray
         |> Array.choose id
+        |> Set.ofArray
 
 type GameState =
     | EnterData
@@ -174,8 +176,8 @@ type Game =
     {   Board: Board
         State: GameState
         Cursor: Cursor
-        EmptyCells: Index []
-        DuplicateCells: Index []}
+        EmptyCells: Index Set
+        DuplicateCells: Index Set}
 
 module Game =
     let GetEmpty g =

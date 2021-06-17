@@ -4,24 +4,35 @@ module ConsoleOutput =
     open System
     open GameParts
 
-    let private setColor background foreground =
-        Console.BackgroundColor <- background
-        Console.ForegroundColor <- foreground
+    module private Colors =
+        let private setColor background foreground =
+            Console.BackgroundColor <- background
+            Console.ForegroundColor <- foreground
 
-    let private White = ConsoleColor.White
-    let private Black = ConsoleColor.Black
-    let private Green = ConsoleColor.DarkGreen
-    let private Red = ConsoleColor.DarkRed
+        let private White = ConsoleColor.White
+        let private Black = ConsoleColor.Black
+        let private Green = ConsoleColor.DarkGreen
+        let private Red = ConsoleColor.DarkRed
 
-    // let private checkCellColor c =
-    //     let b, f = Console.BackgroundColor, Console.ForegroundColor
-    //     match c.CellState with
-    //     | Selected -> setColor White Black
-    //     | Marked -> setColor Green White
-    //     | Given -> setColor White Red
-    //     | Wrong -> setColor Red White
-    //     | Unselected -> ()
-    //     b, f
+        let private cursorColor() = setColor White Black 
+        let private wrongCursorColor() = setColor White Red
+        let private givenColor() = setColor Green White
+        let private wrongColor() = setColor Red White
+        let private normalColor() = setColor Black White
+
+        let checkCellColor i c g =
+            let wrong = if g.DuplicateCells.Contains i || g.EmptyCells.Contains i then true else false
+            let cursor = if g.Cursor = i then true else false
+            let given = 
+                match c with 
+                | Given _ -> true 
+                | _ -> false
+
+            match cursor,wrong with
+            | false,true -> wrongColor()
+            | true,true -> wrongCursorColor()
+            | true,false ->  cursorColor()
+            | false,false -> if given then givenColor() else normalColor()
 
     // let private printCell c =
     //     let b,f = checkCellColor c

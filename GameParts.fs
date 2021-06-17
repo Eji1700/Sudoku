@@ -174,12 +174,12 @@ type Game =
     {   Board: Board
         State: GameState
         Cursor: Cursor
-        Empty: Index []
-        Duplicates: Index []}
+        EmptyCells: Index []
+        DuplicateCells: Index []}
 
 module Game =
     let GetEmpty g =
-        {g with Empty = (Board.GetEmpty g.Board)}
+        {g with EmptyCells = (Board.GetEmpty g.Board)}
 
     let GetDupes g =
-        {g with Duplicates = (Board.GetDupes g.Board)}
+        {g with DuplicateCells = (Board.GetDupes g.Board)}

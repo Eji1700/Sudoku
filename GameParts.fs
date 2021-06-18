@@ -76,7 +76,7 @@ module private Duplicates =
             if arr.Length > 1 && v <> None
             then 
                 arr
-                |> Array.map (fun (_,idx) -> idx )
+                |> Array.map(fun (_,idx) -> idx )
                 |> Some
             else None
         )
@@ -104,25 +104,25 @@ module Board  =
 
     let GetAllRows board =
         [|0..8|]
-        |> Array.map (GetRow board)
+        |> Array.map(GetRow board)
 
     let GetColumn (board:Board) col : Column  =
         board.[*, col] 
 
     let GetAllColumns board =
         [|0..8|]
-        |> Array.map (GetColumn board)
+        |> Array.map(GetColumn board)
 
     let GetGrid (board:Board) (row,col) : Grid =
         board.[row..row+2, col..col+2]
 
     let GetAllGrids b =
         Grid.AllGrids
-        |> Array.map (GetGrid b)
+        |> Array.map(GetGrid b)
 
     let private getDupes getall dupes b =
        getall b
-       |> Array.map dupes
+       |> Array.mapdupes
        |> Array.concat
 
     let private getRowDupes b =

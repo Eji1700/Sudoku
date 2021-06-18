@@ -48,10 +48,7 @@ type Cell =
 module Cell =
     let Create i =
         Option.bind Value.ConvertInt i  
-        |> fun v -> 
-            match v with 
-            | Some v -> v |> Given |> Some
-            | None -> None 
+        |> Option.bind(fun v -> v |> Given |> Some)
 
 type Position = Top | Middle | Bottom
 type Index = int * int

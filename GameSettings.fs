@@ -50,5 +50,5 @@ module Initial =
         {   Board = fileBoard 
             State = StartGame
             Cursor = 0,1 
-            EmptyCells = [||]
-            DuplicateCells = [||]}
+            EmptyCells = Set.empty
+            DuplicateCells = Set.empty}

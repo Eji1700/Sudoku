@@ -122,7 +122,7 @@ module Board  =
 
     let private getDupes getall dupes b =
        getall b
-       |> Array.mapdupes
+       |> Array.map dupes
        |> Array.concat
 
     let private getRowDupes b =

@@ -4,23 +4,28 @@ module ConsoleOutput =
     open System
     open GameParts
 
-    module private Colors =
+    let Init() =   
+        Console.CursorVisible <- false
+        Console.Clear()
+
+    module private Color =
         let private setColor background foreground =
             Console.BackgroundColor <- background
             Console.ForegroundColor <- foreground
 
-        let private White = ConsoleColor.White
-        let private Black = ConsoleColor.Black
-        let private Green = ConsoleColor.DarkGreen
-        let private Red = ConsoleColor.DarkRed
+        let private white = ConsoleColor.White
+        let private black = ConsoleColor.Black
+        let private green = ConsoleColor.DarkGreen
+        let private red = ConsoleColor.DarkRed
 
-        let private cursorColor() = setColor White Black 
-        let private wrongCursorColor() = setColor White Red
-        let private givenColor() = setColor Green White
-        let private wrongColor() = setColor Red White
-        let private normalColor() = setColor Black White
+        let private cursorColor() = setColor white black 
+        let private wrongCursorColor() = setColor white red
+        let private givenColor() = setColor green white
+        let private wrongColor() = setColor red white
+        let private normalColor() = setColor black white
 
-        let checkCellColor i c g = 
+        // Should proably move to cell module and make more generic?
+        let CheckCell i c g = 
             match c with 
             | Given _ -> givenColor() 
             | _ -> 
@@ -32,6 +37,7 @@ module ConsoleOutput =
                 | true,true -> wrongCursorColor()
                 | true,false -> cursorColor()
                 | false,false -> normalColor()
+
 
     // let private printCell c =
     //     let b,f = checkCellColor c
@@ -56,10 +62,6 @@ module ConsoleOutput =
     //         printRow r
     //         printfn "|"
     //         printfn "-------------------"
-             
-    let Init() =   
-        Console.CursorVisible <- false
-        Console.Clear()
 
     let DisplayMessage pos s =
         Console.SetCursorPosition pos

@@ -20,19 +20,18 @@ module ConsoleOutput =
         let private wrongColor() = setColor Red White
         let private normalColor() = setColor Black White
 
-        let checkCellColor i c g =
-            let wrong = if g.DuplicateCells.Contains i || g.EmptyCells.Contains i then true else false
-            let cursor = if g.Cursor = i then true else false
-            let given = 
-                match c with 
-                | Given _ -> true 
-                | _ -> false
+        let checkCellColor i c g = 
+            match c with 
+            | Given _ -> givenColor() 
+            | _ -> 
+                let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
+                let cursor = g.Cursor = i
 
-            match cursor,wrong with
-            | false,true -> wrongColor()
-            | true,true -> wrongCursorColor()
-            | true,false ->  cursorColor()
-            | false,false -> if given then givenColor() else normalColor()
+                match cursor,wrong with
+                | false,true -> wrongColor()
+                | true,true -> wrongCursorColor()
+                | true,false -> cursorColor()
+                | false,false -> normalColor()
 
     // let private printCell c =
     //     let b,f = checkCellColor c

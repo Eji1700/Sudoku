@@ -24,19 +24,28 @@ module ConsoleOutput =
         let private wrongColor() = setColor red white
         let private normalColor() = setColor black white
 
+        let ColorMap =
+            [   "cursor", cursorColor()
+                "wrongCursor", wrongCursorColor()
+                "given", givenColor()
+                "wrong", wrongColor()
+                "normal",normalColor()
+            ]
+            |> Map.ofList
+
         // Should proably move to cell module and make more generic?
-        let CheckCell i c g = 
+        let CheckCell i c (m:Map<string,unit>) g = 
             match c with 
-            | Given _ -> givenColor() 
+            | Given _ -> m.["given"]
             | _ -> 
                 let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
                 let cursor = g.Cursor = i
 
                 match cursor,wrong with
-                | false,true -> wrongColor()
-                | true,true -> wrongCursorColor()
-                | true,false -> cursorColor()
-                | false,false -> normalColor()
+                | false,true -> m.["wrong"]
+                | true,true -> m.["wrongCursor"]
+                | true,false -> m.["cursor"]
+                | false,false -> m.["normal"]
 
 
     // let private printCell c =

@@ -48,7 +48,7 @@ type Cell =
 module Cell =
     let Create i =
         Option.bind Value.ConvertInt i  
-        |> Option.bind(fun v -> v |> Given |> Some)
+        |> Option.bind( Given >> Some)
 
 type Position = Top | Middle | Bottom
 type Index = int * int
@@ -122,8 +122,7 @@ module Board  =
 
     let private getDupes getall dupes b =
        getall b
-       |> Array.map dupes
-       |> Array.concat
+       |> Array.collect dupes
 
     let private getRowDupes b =
         getDupes GetAllRows Duplicates.Row b
@@ -135,9 +134,8 @@ module Board  =
         getDupes GetAllGrids Duplicates.Grid b
 
     let GetDupes b =
-        getRowDupes b 
-        |> Array.append(getColDupes b) 
-        |> Array.append(getGridDupes b)
+        [|getRowDupes b; getColDupes b; getGridDupes b |]
+        |> Array.concat
         |> Array.distinct
         |> Set.ofArray
         

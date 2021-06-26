@@ -34,10 +34,22 @@ module ConsoleOutput =
             |> Map.ofList
 
         // Should proably move to cell module and make more generic?
+        // Need to rework option logic?
         let CheckCell i c g = 
             match c with 
-            | Given _ -> colorMap.["given"]
-            | _ -> 
+            | Some v -> 
+                match v with 
+                |  Given _ -> colorMap.["given"]
+                | _ -> 
+                    let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
+                    let cursor = g.Cursor = i
+
+                    match cursor,wrong with
+                    | false,true -> colorMap.["wrong"]
+                    | true,true -> colorMap.["wrongCursor"]
+                    | true,false -> colorMap.["cursor"]
+                    | false,false -> colorMap.["normal"]
+            | None ->
                 let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
                 let cursor = g.Cursor = i
 
@@ -48,12 +60,11 @@ module ConsoleOutput =
                 | false,false -> colorMap.["normal"]
 
 
-    // let private printCell c =
-    //     let b,f = checkCellColor c
-    //     match c.Value with
-    //     | Empty -> printf "| "
-    //     | Value v -> printf "|%i" v
-    //     setColor b f 
+    let private printCell i o g =
+        Color.CheckCell i o g
+        match o with
+        | None -> printf "| "
+        | Some c -> printf "|%i" (Cell.ToInt c)
 
     // let private printRow (r:Row) =
     //     r |> Array.iter printCell

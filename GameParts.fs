@@ -41,6 +41,18 @@ module Value =
         | 9 -> Some V9
         | _ -> None
 
+    let ToInt v =
+        match v with 
+        | V1 -> 1
+        | V2 -> 2
+        | V3 -> 3
+        | V4 -> 4
+        | V5 -> 5
+        | V6 -> 6
+        | V7 -> 7
+        | V8 -> 8
+        | V9 -> 9
+
 type Cell =
     | Entered of Value
     | Given of Value
@@ -49,6 +61,11 @@ module Cell =
     let Create i =
         Option.bind Value.ConvertInt i  
         |> Option.bind( Given >> Some)
+
+    let ToInt c =
+        match c with 
+        | Entered v
+        | Given v  -> Value.ToInt v 
 
 type Position = Top | Middle | Bottom
 type Index = int * int

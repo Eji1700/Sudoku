@@ -1,12 +1,15 @@
 namespace UI
+open System
+open GameParts
 
 module ConsoleOutput =
-    open System
-    open GameParts
-
     let Init() =   
         Console.CursorVisible <- false
         Console.Clear()
+
+    let DisplayMessage pos s =
+        Console.SetCursorPosition pos
+        printfn "%s" s
 
     module private Color =
         let private setColor background foreground =
@@ -59,49 +62,36 @@ module ConsoleOutput =
                 | true,false -> colorMap.["cursor"]
                 | false,false -> colorMap.["normal"]
 
-
-    let private printCell i o g =
+    let private printCell g (o,i) =
         Color.CheckCell i o g
         match o with
         | None -> printf "| "
         | Some c -> printf "|%i" (Cell.ToInt c)
 
-    // let private printRow (r:Row) =
-    //     r |> Array.iter printCell
+    let private printRow g (r:Row) =
+        r |> Array.iter (printCell g) 
 
-    // let private showRow ((r:Row), p) =
-    //     match p with
-    //     | Top ->
-    //         printfn "___________________"
-    //         printRow r
-    //         printfn "|"
-    //     | Middle ->
-    //         printRow r
-    //         printfn "|"
-    //     | Bottom ->
-    //         printRow r
-    //         printfn "|"
-    //         printfn "-------------------"
+    let DrawBoard g =
+        Console.SetCursorPosition (0,0)
+        g.Board
+        |> Array2D.iter(fun c ->
+            let x, y = snd c
+            match x,y with 
+            | 0,0 -> printfn "___________________"
+            | 3,0 
+            | 6,0 -> printfn "-------------------"
+            | _ -> ()
 
-    let DisplayMessage pos s =
-        Console.SetCursorPosition pos
-        printfn "%s" s
+            printCell g c
 
-    // let DrawBoard g =
-    //     Console.SetCursorPosition (0,0)
-    //     [|0..8|]
-    //     |> Array.map (fun i ->
-    //         let p =
-    //             match i with
-    //             | 0 -> Top
-    //             | 1 | 4 | 7 | 3 | 6 -> Middle
-    //             | 2 | 5 | 8 -> Bottom
-    //             | _ -> Bottom
+            if y = 8 then printfn "|"
 
-    //         (Board.GetRow i g.Board), p)
-    //     |> Array.iter showRow
+        )
+        printfn "-------------------"
 
     let GameOver() =
         DisplayMessage (0,14) "Game Over, you win!" 
         DisplayMessage (0,15) "Press enter to quit" 
         Console.ReadLine() |> ignore
+
+ConsoleOutput.DrawBoard Initial.Game

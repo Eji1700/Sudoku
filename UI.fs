@@ -85,7 +85,6 @@ module ConsoleOutput =
             printCell g c
 
             if y = 8 then printfn "|"
-
         )
         printfn "-------------------"
 

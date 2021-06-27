@@ -8,16 +8,6 @@ let main argv =
     GameParts.Board.GetDupes Initial.dupeBoard
     |> printfn "%A"
 
-    let test =
-        [|
-            [|1;2;3|]
-            [|4;5;6|]
-        |]
-        |> array2D
-        |> Array2D.mapi(fun x y i ->
-            printfn "%A %A %A" x y i
-        )
-
     0
 
     // todo

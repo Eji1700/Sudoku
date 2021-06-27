@@ -41,8 +41,10 @@ module Initial =
             |> File.ReadLines
 
         data
-        |> Seq.map(fun line -> line.Split(","))
-        |> Seq.map(fun row -> row |> Array.map (fun s -> s |> int |> Some))
+        |> Seq.map(
+            fun line -> line.Split(",")
+            >> fun row -> row |> Array.map (int >> Some)
+        )
         |> array2D 
         |> Board.Create
 

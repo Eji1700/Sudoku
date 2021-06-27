@@ -7,7 +7,12 @@ module ConsoleOutput =
         Console.CursorVisible <- false
         Console.Clear()
 
-    let DisplayMessage pos s =
+    let ClearRow pos =
+        Console.SetCursorPosition pos
+        printf "                    "
+        pos
+
+    let DisplayMessage s pos =
         Console.SetCursorPosition pos
         printfn "%s" s
 
@@ -64,10 +69,12 @@ module ConsoleOutput =
             let x, y = snd c
             match x,y with 
             | 0,0 -> printfn "___________________"
+            
             | 3,0 
             | 6,0 -> 
                 Color.normalColor()
                 printfn "-------------------"
+            
             | _ -> ()
 
             printCell g c
@@ -79,6 +86,12 @@ module ConsoleOutput =
         printfn "-------------------"
 
     let GameOver() =
-        DisplayMessage (0,14) "Game Over, you win!" 
-        DisplayMessage (0,15) "Press enter to quit" 
+        (0,14)
+        |> ClearRow
+        |> DisplayMessage "Game Over, you win!" 
+        
+        (0,15)
+        |> ClearRow
+        |> DisplayMessage "Press enter to quit" 
+
         Console.ReadLine() |> ignore

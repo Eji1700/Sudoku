@@ -47,7 +47,7 @@ module Initial =
         |> Board.Create
 
     let Game = 
-        {   Board = fileBoard 
+        {   Board = defaultBoard 
             State = StartGame
             Cursor = 0,1 
             EmptyCells = Set.empty

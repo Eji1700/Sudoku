@@ -93,5 +93,3 @@ module ConsoleOutput =
         DisplayMessage (0,14) "Game Over, you win!" 
         DisplayMessage (0,15) "Press enter to quit" 
         Console.ReadLine() |> ignore
-
-ConsoleOutput.DrawBoard Initial.Game

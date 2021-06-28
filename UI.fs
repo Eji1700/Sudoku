@@ -30,18 +30,28 @@ module ConsoleOutput =
         let private wrongCursorColor() = setColor white red
         let private givenColor() = setColor blue white
         let private wrongColor() = setColor red white
-        let normalColor() = setColor black white
+        let private normalColor() = setColor black white
 
+        let ColorMap = 
+            [|
+                "cursor", cursorColor
+                "wrongCursor", wrongCursorColor
+                "given", givenColor
+                "wrong", wrongColor
+                "normal", normalColor
+
+            |]
+            |> Map.ofArray
 
         let private nonGiven i g =
             let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
             let cursor = g.Cursor = i
 
             match cursor,wrong with
-            | false, true -> wrongColor()
-            | true, true -> wrongCursorColor()
-            | true, false -> cursorColor()
-            | false, false -> normalColor()
+            | false, true -> ColorMap.["wrong"]()
+            | true, true -> ColorMap.["wrongCUrsorColor"]()
+            | true, false -> ColorMap.["cursor"]()
+            | false, false -> ColorMap.["normal"]()
 
         // Should proably move to cell module and make more generic?
         // Need to rework option logic?
@@ -72,7 +82,7 @@ module ConsoleOutput =
             
             | 3,0 
             | 6,0 -> 
-                Color.normalColor()
+                Color.ColorMap.["normal"]()
                 printfn "-------------------"
             
             | _ -> ()
@@ -80,7 +90,7 @@ module ConsoleOutput =
             printCell g c
 
             if y = 8 then 
-                Color.normalColor()
+                Color.ColorMap.["normal"]()
                 printfn "|"
         )
         printfn "-------------------"

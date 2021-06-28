@@ -9,7 +9,6 @@ let main argv =
     UI.ConsoleOutput.DrawBoard Initial.Game
 
     Console.ReadLine() |> ignore
-
     0
 
     // todo

@@ -33,14 +33,11 @@ module ConsoleOutput =
         let private normalColor() = setColor black white
 
         let ColorMap = 
-            [|
-                "cursor", cursorColor
+            [|  "cursor", cursorColor
                 "wrongCursor", wrongCursorColor
                 "given", givenColor
                 "wrong", wrongColor
-                "normal", normalColor
-
-            |]
+                "normal", normalColor|]
             |> Map.ofArray
 
         let private nonGiven i g =

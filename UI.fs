@@ -7,7 +7,8 @@ module ConsoleOutput =
         Console.CursorVisible <- false
         Console.Clear()
 
-    let ClearRow pos =
+    // Needstesting?
+    let private clearRow pos =
         Console.SetCursorPosition pos
         printf "                    "
         pos
@@ -15,6 +16,10 @@ module ConsoleOutput =
     let DisplayMessage s pos =
         Console.SetCursorPosition pos
         printfn "%s" s
+        
+    let CDisplayMessage s pos =
+        clearRow pos
+        |> DisplayMessage s
 
     module private Color =
         let private setColor background foreground =
@@ -52,8 +57,8 @@ module ConsoleOutput =
 
         // Should proably move to cell module and make more generic?
         // Need to rework option logic?
-        let CheckCell i c g = 
-            match c with 
+        let CheckCell i o g = 
+            match o with 
             | None -> nonGiven i g
             | Some v -> 
                 match v with 
@@ -66,19 +71,16 @@ module ConsoleOutput =
         | None -> printf "| "
         | Some c -> printf "|%i" (Cell.ToInt c)
 
-    let private printRow g (r:Row) =
-        r |> Array.iter (printCell g) 
-
     let DrawBoard g =
         Console.SetCursorPosition (0,0)
         g.Board
         |> Array2D.iter(fun c ->
             let x, y = snd c
-            match x,y with 
-            | 0,0 -> printfn "___________________"
+            match x, y with 
+            | 0, 0 -> printfn "___________________"
             
-            | 3,0 
-            | 6,0 -> 
+            | 3, 0 
+            | 6, 0 -> 
                 Color.ColorMap.["normal"]()
                 printfn "-------------------"
             
@@ -93,12 +95,7 @@ module ConsoleOutput =
         printfn "-------------------"
 
     let GameOver() =
-        (0,14)
-        |> ClearRow
-        |> DisplayMessage "Game Over, you win!" 
-        
-        (0,15)
-        |> ClearRow
-        |> DisplayMessage "Press enter to quit" 
-
+        CDisplayMessage "Game Over, you win!" (0, 14)
+        CDisplayMessage "Press enter to quit." (0, 15)  
+        // Should eventually call a main menu thing
         Console.ReadLine() |> ignore

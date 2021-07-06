@@ -85,9 +85,8 @@ module Grid =
             6,6|]
 
 module private Duplicates =    
-    let private getDupes f arr =
+    let private getDupes arr =
         arr
-        |> f //to allow grids to convert to array, just skipped otherwise with id call.
         |> Array.groupBy(fun (c,_) -> c)
         |> Array.choose(fun(v, arr) ->
             if arr.Length > 1 && v <> None
@@ -100,13 +99,13 @@ module private Duplicates =
         |> Array.concat
 
     let Row (r:Row) = 
-        getDupes id r
+        getDupes r
 
     let Column (c:Column) =
-        getDupes id c
+        getDupes c
 
     let Grid (g:Grid) =
-        getDupes Array2D.toArray g
+        g |> Array2D.toArray |> getDupes 
 
 type Board = ((Cell option) * (Index)) [,] 
 module Board  =
@@ -137,8 +136,8 @@ module Board  =
         Grid.AllGrids
         |> Array.map(GetGrid b)
 
-    let private getDupes getall dupes b =
-       getall b
+    let private getDupes getAll dupes b =
+       getAll b
        |> Array.collect dupes
 
     let private getRowDupes b =
@@ -177,11 +176,6 @@ type GameState =
     | GameOver
     | Quit
 
-type Altered =
-    | Marked
-    | Wrong
-
-type AlteredCells = (int * int * Altered) list
 type Cursor = Index
 
 type Game = 

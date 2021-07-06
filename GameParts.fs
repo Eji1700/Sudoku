@@ -111,10 +111,10 @@ module private Duplicates =
        |> Array.collect dupes
 
     let private allRows b getAll =
-        all row b getAll
+        all getDupes b getAll
     
     let private allColumns b getAll =
-        all column b getAll
+        all getDupes b getAll
 
     let private allGrids b getAll =
         all grid b getAll

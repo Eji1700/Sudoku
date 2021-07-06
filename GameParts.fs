@@ -67,7 +67,6 @@ module Cell =
         | Entered v
         | Given v  -> Value.ToInt v 
 
-type Position = Top | Middle | Bottom
 type Index = int * int
 type Row = ((Cell option) * Index)[]        
 type Column = ((Cell option) * Index)[]
@@ -98,14 +97,33 @@ module private Duplicates =
         )
         |> Array.concat
 
-    let Row (r:Row) = 
+    let private row (r:Row) = 
         getDupes r
 
-    let Column (c:Column) =
+    let private column (c:Column) =
         getDupes c
 
-    let Grid (g:Grid) =
+    let private grid (g:Grid) =
         g |> Array2D.toArray |> getDupes 
+
+    let private all dupes b getAll =
+       getAll b
+       |> Array.collect dupes
+
+    let private allRows b getAll =
+        all row b getAll
+    
+    let private allColumns b getAll =
+        all column b getAll
+
+    let private allGrids b getAll =
+        all grid b getAll
+
+    let GetAll rows cols grids b =
+        [|allRows b rows; allColumns b cols; allGrids b grids|]
+        |> Array.concat
+        |> Array.distinct
+        |> Set.ofArray
 
 type Board = ((Cell option) * (Index)) [,] 
 module Board  =
@@ -136,24 +154,8 @@ module Board  =
         Grid.AllGrids
         |> Array.map(GetGrid b)
 
-    let private getDupes getAll dupes b =
-       getAll b
-       |> Array.collect dupes
-
-    let private getRowDupes b =
-        getDupes GetAllRows Duplicates.Row b
-
-    let private getColDupes b =
-        getDupes GetAllColumns Duplicates.Column b
-
-    let private getGridDupes b =
-        getDupes GetAllGrids Duplicates.Grid b
-
     let GetDupes b =
-        [|getRowDupes b; getColDupes b; getGridDupes b |]
-        |> Array.concat
-        |> Array.distinct
-        |> Set.ofArray
+        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids b 
         
     let GetEmpty (b:Board) =
         b

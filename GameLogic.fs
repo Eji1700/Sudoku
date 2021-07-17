@@ -102,14 +102,15 @@ let rec GameLoop (g: Game) =
     | CheckData ->
         ConsoleOutput.DrawBoard g
 
-        let s =  Game.CheckSolution g
+        let newG = Game.UpdateIncorrectCells g
+        let s =  Game.CheckSolution newG
         let m = sprintf "Correct?: %b" s
         ConsoleOutput.DisplayMessage m (0,14)
 
-        if s then { g with State = GameOver } |> GameLoop
+        if s then { newG with State = GameOver } |> GameLoop
         else
             ConsoleOutput.DisplayMessage "Incorrect, keep trying" (0,15) 
-            { g with State = Running } |> GameLoop
+            { newG with State = DrawBoard } |> GameLoop
 
     | DrawBoard ->
         ConsoleOutput.DrawBoard g

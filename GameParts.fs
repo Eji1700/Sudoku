@@ -162,7 +162,7 @@ module Board  =
     let GetDupes b =
         Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids b 
         
-    let GetEmpty (b:Board) =
+    let GetEmpty b =
         b
         |> Array2D.map(fun c ->
             let v,i = c
@@ -205,6 +205,10 @@ module Game =
     let GetDupes g =
         {g with DuplicateCells = (Board.GetDupes g.Board)}
 
+    let UpdateIncorrectCells g =
+        {   g with 
+                EmptyCells = Board.GetEmpty g.Board
+                DuplicateCells = Board.GetEmpty g.Board }
+
     let CheckSolution g =
-        // need to add the part where i actually look for dupes/empties and update the list
         Set.isEmpty g.EmptyCells && Set.isEmpty g.DuplicateCells

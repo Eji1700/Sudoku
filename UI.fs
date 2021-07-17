@@ -51,7 +51,7 @@ module ConsoleOutput =
 
             match cursor,wrong with
             | false, true -> ColorMap.["wrong"]()
-            | true, true -> ColorMap.["wrongCUrsorColor"]()
+            | true, true -> ColorMap.["wrongCursor"]()
             | true, false -> ColorMap.["cursor"]()
             | false, false -> ColorMap.["normal"]()
 

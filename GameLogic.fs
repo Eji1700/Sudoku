@@ -93,7 +93,7 @@ let private checkInput g input  =
 let rec GameLoop (g: Game) =
     match g.State with
     | StartGame -> 
-        ConsoleOutput.DisplayMessage (0,0) "Press enter to continue. While playing ESC to quit and Space to check your answer"
+        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer" (0,0)
         Console.ReadLine() |> ignore
         Console.Clear()
         GameLoop { g with State = DrawBoard }
@@ -103,11 +103,12 @@ let rec GameLoop (g: Game) =
         ConsoleOutput.DrawBoard g
 
         let s =  Game.CheckSolution g
-        sprintf "Correct?: %b" s |> ConsoleOutput.DisplayMessage (0,14)
+        let m = sprintf "Correct?: %b" s
+        ConsoleOutput.DisplayMessage m (0,14)
 
         if s then { g with State = GameOver } |> GameLoop
         else
-            ConsoleOutput.DisplayMessage (0,15) "Incorrect, keep trying"
+            ConsoleOutput.DisplayMessage "Incorrect, keep trying" (0,15) 
             { g with State = Running } |> GameLoop
 
     | DrawBoard ->

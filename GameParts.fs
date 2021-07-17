@@ -65,7 +65,7 @@ module Cell =
     let ToInt c =
         match c with 
         | Entered v
-        | Given v  -> Value.ToInt v 
+        | Given v  -> Value.ToInt v
     
     let ConvertKey k  =
         match Value.ConvertKey k with 
@@ -204,3 +204,6 @@ module Game =
 
     let GetDupes g =
         {g with DuplicateCells = (Board.GetDupes g.Board)}
+
+    let CheckSolution g =
+        Set.isEmpty g.EmptyCells && Set.isEmpty g.DuplicateCells

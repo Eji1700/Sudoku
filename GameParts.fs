@@ -206,4 +206,5 @@ module Game =
         {g with DuplicateCells = (Board.GetDupes g.Board)}
 
     let CheckSolution g =
+        // need to add the part where i actually look for dupes/empties and update the list
         Set.isEmpty g.EmptyCells && Set.isEmpty g.DuplicateCells

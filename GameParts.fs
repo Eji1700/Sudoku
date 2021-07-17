@@ -206,9 +206,9 @@ module Game =
         {g with DuplicateCells = (Board.GetDupes g.Board)}
 
     let UpdateIncorrectCells g =
-        {   g with 
-                EmptyCells = Board.GetEmpty g.Board
-                DuplicateCells = Board.GetEmpty g.Board }
+        {g with 
+            EmptyCells = Board.GetEmpty g.Board
+            DuplicateCells = Board.GetDupes g.Board}
 
     let CheckSolution g =
         Set.isEmpty g.EmptyCells && Set.isEmpty g.DuplicateCells

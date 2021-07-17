@@ -23,24 +23,27 @@ let private boundryCheck x y =
     x > -1 &&
     y > -1
 
-// let rec private moveCell direction amount g =
-//     let x, y = g.ActiveCell
-//     let xAdj, yAdj = Direction.Get direction amount
-//     let newX = x + xAdj
-//     let newY = y + yAdj
+let rec private moveCell direction amount g =
+    let x, y = g.Cursor
+    let xAdj, yAdj = Direction.Get direction amount
+    let newX = x + xAdj
+    let newY = y + yAdj
     
-//     if boundryCheck newX newY then 
-//         match  g.Board.[newX, newY].CellState with  
-//         | Given ->  
-//             let incr = amount + 1
-//             moveCell direction incr g
-//         | _ ->
-//             let newestBoard = Board.ChangeCellStateMove (x,newX) (y,newY) g.Board
-//             { g with 
-//                 Board = newestBoard
-//                 ActiveCell = newX, newY
-//                 State = DrawBoard }
-//     else { g with State = Running }
+    if boundryCheck newX newY then 
+        match  g.Board.[newX, newY] with  
+        | (Some c),_ ->
+            match c with 
+            | Given _ ->  
+                moveCell direction (amount + 1) g
+            | Entered _ ->
+                { g with 
+                    Cursor = newX,newY
+                    State = DrawBoard }
+        | _ ->
+            { g with 
+                Cursor = newX,newY
+                State = DrawBoard }
+    else { g with State = Running }
 
 // let private cellChange k g =
 //     // uses consolekey enum. Top row 0 is 48-57, numpad 0 is 96.

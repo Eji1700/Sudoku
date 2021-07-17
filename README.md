@@ -3,4 +3,4 @@ Mostly immutable and tried to be idiomatic, although i did focus on staying immu
 
 Currently has 0 for loops. One of the early questions I had when learning F# was "how the hell do i do anything without just defaulting to for loops", and a lot of the examples I found were using them as well, so a major goal was to not use any to make an example for those like me.
 
-Technically cross platform(i think?  I've not tested) and working on giving it two front ends. Currently has a console output(ok not anymore, i'm refactoring again) but am looking at using fabulous for the "proper" front end.
+Technically cross platform(i think?  I've not tested) and working on giving it two front ends. Currently has a console output but am looking at using fabulous or some other cross platform option for the "proper" front end.

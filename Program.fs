@@ -5,7 +5,7 @@ open System
 [<EntryPoint>]
 let main argv =
     UI.ConsoleOutput.Init() //remove me and put in argu console parsing?    
-    //GameLoop Initial.Game
+    GameLoop Initial.Game
     UI.ConsoleOutput.DrawBoard Initial.Game
 
     Console.ReadLine() |> ignore

@@ -62,6 +62,11 @@ module Cell =
         Option.bind Value.ConvertInt i  
         |> Option.bind( Given >> Some)
 
+    let GetValue c = 
+        match c with 
+        | Entered v
+        | Given v -> v
+
     let ToInt c =
         match c with 
         | Entered v
@@ -91,7 +96,10 @@ module Grid =
 module private Duplicates =    
     let private getDupes arr =
         arr
-        |> Array.groupBy(fun (c,_) -> c)
+        |> Array.groupBy(fun (c,_) ->
+            match c with 
+            | Some c -> Some (Cell.GetValue c)
+            | None -> None)
         |> Array.choose(fun(v, arr) ->
             if arr.Length > 1 && v <> None
             then 

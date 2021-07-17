@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "SmMm9BL24ersOVmhk8N8NZKyF6hstjOcW+lflZT/7kvgcYadbRZhsuBA6HwRmrNJqwo+iaNbpGxK2nxDzhys6A==",
+  "dgSpecHash": "QzBsLwzc6oVYN070Vd6zd5nKgia7Jybbn7zx2g0h3G/zeO0/ULzDrbkdOtMheARMKgNIaBfaaaydGDf2QVwCzg==",
   "success": true,
   "projectFilePath": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
   "expectedPackageFiles": [
-    "C:\\Users\\regul\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512"
+    "C:\\Users\\regul\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512",
+    "C:\\Users\\regul\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\5.0.1\\microsoft.netcore.app.runtime.win-x64.5.0.1.nupkg.sha512",
+    "C:\\Users\\regul\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\5.0.1\\microsoft.windowsdesktop.app.runtime.win-x64.5.0.1.nupkg.sha512",
+    "C:\\Users\\regul\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\5.0.1\\microsoft.aspnetcore.app.runtime.win-x64.5.0.1.nupkg.sha512"
   ],
   "logs": []
 }

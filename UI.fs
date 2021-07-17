@@ -94,7 +94,8 @@ module ConsoleOutput =
         )
         printfn "-------------------"
 
-    let GameOver() =
+    let GameOver g =
+        DrawBoard g
         CDisplayMessage "Game Over, you win!" (0, 14)
         CDisplayMessage "Press enter to quit." (0, 15)  
         // Should eventually call a main menu thing

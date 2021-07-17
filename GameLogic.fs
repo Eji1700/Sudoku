@@ -98,7 +98,6 @@ let rec GameLoop (g: Game) =
         Console.Clear()
         GameLoop { g with State = DrawBoard }
         
-    | EnterData -> () //change if want to not be unit
     | CheckData ->
         ConsoleOutput.DrawBoard g
 
@@ -124,5 +123,5 @@ let rec GameLoop (g: Game) =
             |> checkInput g
             |> GameLoop
 
-    | GameOver -> ConsoleOutput.GameOver() //change if want to not be unit
+    | GameOver -> ConsoleOutput.GameOver g 
     | Quit -> () //change if want to not be unit

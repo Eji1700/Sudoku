@@ -189,7 +189,6 @@ module Board  =
         b
 
 type GameState =
-    | EnterData
     | CheckData
     | StartGame
     | DrawBoard

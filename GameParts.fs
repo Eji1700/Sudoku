@@ -66,6 +66,11 @@ module Cell =
         match c with 
         | Entered v
         | Given v  -> Value.ToInt v 
+    
+    let ConvertKey k  =
+        match Value.ConvertKey k with 
+        | Some v -> Some (Entered v)
+        | None -> None
 
 type Index = int * int
 type Row = ((Cell option) * Index)[]        
@@ -168,6 +173,12 @@ module Board  =
         |> Array2D.toArray
         |> Array.choose id
         |> Set.ofArray
+
+    let ChangeValue row col value (b:Board) =
+        // i hate that this is mutable but i'm too tired to do it immutably.
+        // I'll try later but for now returning a board just to setup the rest
+        b.[row,col] <- (value,(row,col))
+        b
 
 type GameState =
     | EnterData

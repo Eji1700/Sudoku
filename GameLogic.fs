@@ -40,16 +40,18 @@ let rec private moveCell direction amount g =
     else 
         { g with State = Running }
 
-// let private cellChange k g =
-//     // uses consolekey enum. Top row 0 is 48-57, numpad 0 is 96.
-//     let v = 
-//         let num = int k
-//         if num < 96 then num - 48
-//         else num - 96 
-//     let r,c = g.ActiveCell
-//     { g with 
-//         Board = Board.ChangeCellValue r c (Value v) g.Board
-//         State = DrawBoard }  
+let private cellChange k g =
+    // uses consolekey enum. Top row 0 is 48-57, numpad 0 is 96.
+    // let v = 
+    //     let num = int k
+    //     if num < 96 then num - 48
+    //     else num - 96 
+    let r,c = g.Cursor
+    let v = Cell.ConvertKey k
+    let newB = Board.ChangeValue r c v g.Board
+    { g with 
+        Board = newB
+        State = DrawBoard }  
 
 // let private checkInput g input  =
 //     match input with 

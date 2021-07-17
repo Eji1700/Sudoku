@@ -8,6 +8,7 @@ module ConsoleOutput =
         Console.Clear()
 
     // Needstesting?
+    // Doesn't appear to work
     let private clearRow pos =
         Console.SetCursorPosition pos
         printf "                    "
@@ -56,14 +57,11 @@ module ConsoleOutput =
             | false, false -> ColorMap.["normal"]()
 
         // Should proably move to cell module and make more generic?
-        // Need to rework option logic?
         let CheckCell i o g = 
             match o with 
             | None -> nonGiven i g
-            | Some v -> 
-                match v with 
-                | Given _ -> givenColor()
-                | _ -> nonGiven i g
+            | (Some (Given _)) -> givenColor()
+            | _ -> nonGiven i g
 
     let private printCell g (o,i) =
         Color.CheckCell i o g

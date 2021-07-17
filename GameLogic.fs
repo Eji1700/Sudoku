@@ -31,19 +31,14 @@ let rec private moveCell direction amount g =
     
     if boundryCheck newX newY then 
         match  g.Board.[newX, newY] with  
-        | (Some c),_ ->
-            match c with 
-            | Given _ ->  
-                moveCell direction (amount + 1) g
-            | Entered _ ->
-                { g with 
-                    Cursor = newX,newY
-                    State = DrawBoard }
+        | (Some (Given _)),_ ->
+            moveCell direction (amount + 1) g
         | _ ->
             { g with 
                 Cursor = newX,newY
                 State = DrawBoard }
-    else { g with State = Running }
+    else 
+        { g with State = Running }
 
 // let private cellChange k g =
 //     // uses consolekey enum. Top row 0 is 48-57, numpad 0 is 96.

@@ -10,10 +10,10 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net5.0/Sudoku.dll",
-            "args": ["-c"],
+            "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "console": "externalTerminal"
+            "console": "internalConsole"
         }
 
     ]

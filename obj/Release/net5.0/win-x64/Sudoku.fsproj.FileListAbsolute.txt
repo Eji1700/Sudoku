@@ -18,6 +18,13 @@ C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\ru\FSharp.Core.resources.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\tr\FSharp.Core.resources.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\zh-Hans\FSharp.Core.resources.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\zh-Hant\FSharp.Core.resources.dll
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.fsprojAssemblyReference.cache
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.AssemblyInfoInputs.cache
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.AssemblyInfo.fs
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.fsproj.CopyComplete
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.dll
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.pdb
+C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.genruntimeconfig.cache
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\Microsoft.CSharp.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\Microsoft.VisualBasic.Core.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\Microsoft.VisualBasic.dll
@@ -237,10 +244,3 @@ C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\mscordaccore_amd64_amd64_5.0.120.57
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\mscordbi.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\mscorrc.dll
 C:\Code\F#\Sudoku\bin\Release\net5.0\win-x64\ucrtbase.dll
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.fsprojAssemblyReference.cache
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.AssemblyInfoInputs.cache
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.AssemblyInfo.fs
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.fsproj.CopyComplete
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.dll
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.pdb
-C:\Code\F#\Sudoku\obj\Release\net5.0\win-x64\Sudoku.genruntimeconfig.cache

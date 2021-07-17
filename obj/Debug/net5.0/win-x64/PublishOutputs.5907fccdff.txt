@@ -1,6 +1,2 @@
 C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\Sudoku.pdb
-C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\clrcompression.dll
-C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\clrjit.dll
-C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\coreclr.dll
-C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\mscordaccore.dll
 C:\Code\F#\Sudoku\bin\Debug\net5.0\win-x64\publish\Sudoku.exe

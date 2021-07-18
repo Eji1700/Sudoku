@@ -11,7 +11,7 @@ module ConsoleOutput =
     // Doesn't appear to work
     let private clearRow pos =
         Console.SetCursorPosition pos
-        printf "                    "
+        printf "                                "
         pos
 
     let DisplayMessage s pos =

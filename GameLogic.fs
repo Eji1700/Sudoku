@@ -51,6 +51,7 @@ let private checkInput g input  =
     match input with 
     | ConsoleKey.Escape -> { g with State = Quit }
     | ConsoleKey.Spacebar -> { g with State = CheckData }
+    | ConsoleKey.P -> {g with State = GameOver }
 
     | ConsoleKey.K 
     | ConsoleKey.S

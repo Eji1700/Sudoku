@@ -100,7 +100,8 @@ module private Input =
 let rec GameLoop (g: Game) =
     match g.State with
     | StartGame -> 
-        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer" (0,0)
+        ConsoleOutput.DisplayMessage "Press enter to continue. While playing ESC to quit and Space to check your answer." (0,0)
+        ConsoleOutput.DisplayMessage "C can be used to clear errors after checking." (0,1)
         Console.ReadLine() |> ignore
         Console.Clear()
         GameLoop { g with State = DrawBoard }

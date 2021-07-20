@@ -7,8 +7,6 @@ module ConsoleOutput =
         Console.CursorVisible <- false
         Console.Clear()
 
-    // Needstesting?
-    // Doesn't appear to work
     let private clearRow pos =
         Console.SetCursorPosition pos
         printf "                                "

@@ -4,6 +4,11 @@ open System
 module Array2D = 
     let toArray (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toArray
 
+    let set (x: int) (y: int) (value: 't) (array: 't[,]) : 't[,] =
+        let copy = Array2D.copy array
+        Array2D.set copy x y value
+        copy
+
 type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
 module Value =
     let ConvertKey k =
@@ -182,11 +187,9 @@ module Board  =
         |> Array.choose id
         |> Set.ofArray
 
-    let ChangeValue row col value (b:Board) =
-        // i hate that this is mutable but i'm too tired to do it immutably.
-        // I'll try later but for now returning a board just to setup the rest
-        b.[row,col] <- (value,(row,col))
-        b
+    let ChangeValue row col value (b:Board) : Board =
+        b 
+        |> Array2D.set row col (value,(row,col))
 
 type GameState =
     | CheckData

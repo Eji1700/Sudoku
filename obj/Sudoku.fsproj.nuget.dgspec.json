@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj": {}
+    "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj": {}
   },
   "projects": {
-    "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj": {
+    "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
+        "projectUniqueName": "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
         "projectName": "Sudoku",
-        "projectPath": "C:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
-        "packagesPath": "C:\\Users\\regul\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\F#\\Sudoku\\obj\\",
+        "projectPath": "D:\\Code\\F#\\Sudoku\\Sudoku.fsproj",
+        "packagesPath": "C:\\Users\\David Ungar\\.nuget\\packages\\",
+        "outputPath": "D:\\Code\\F#\\Sudoku\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\regul\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\David Ungar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,6 +40,7 @@
           "targetAlias": "net5.0",
           "dependencies": {
             "FSharp.Core": {
+              "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
               "version": "[5.0.0, )",
               "generatePathProperty": true
@@ -59,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.303\\RuntimeIdentifierGraph.json"
         }
       }
     }

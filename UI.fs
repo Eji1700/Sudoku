@@ -70,8 +70,8 @@ module ConsoleOutput =
     let DrawBoard g =
         Console.SetCursorPosition (0,0)
         g.Board
-        |> Array2D.iter(fun c ->
-            let x, y = snd c
+        |> Array2D.iter(fun (cell,idx) ->
+            let x, y = idx
             match x, y with 
             | 0, 0 -> printfn "___________________"
             
@@ -82,7 +82,7 @@ module ConsoleOutput =
             
             | _ -> ()
 
-            printCell g c
+            printCell g (cell,idx)
 
             if y = 8 then 
                 Color.ColorMap.["normal"]()

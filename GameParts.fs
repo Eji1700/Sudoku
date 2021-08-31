@@ -11,8 +11,8 @@ module Array2D =
 
 type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
 module Value =
-    let ConvertKey k =
-        match k with
+    let ConvertKey key =
+        match key with
         | ConsoleKey.D1
         | ConsoleKey.NumPad1 -> Some V1
         | ConsoleKey.D2
@@ -67,18 +67,18 @@ module Cell =
         Option.bind Value.ConvertInt i  
         |> Option.bind( Given >> Some)
 
-    let GetValue c = 
-        match c with 
-        | Entered v
-        | Given v -> v
+    let GetValue cell = 
+        match cell with 
+        | Entered value
+        | Given value -> value
 
-    let ToInt c =
-        match c with 
-        | Entered v
-        | Given v  -> Value.ToInt v
+    let ToInt cell =
+        match cell with 
+        | Entered value
+        | Given value  -> Value.ToInt value
     
-    let ConvertKey k  =
-        match Value.ConvertKey k with 
+    let ConvertKey key  =
+        match Value.ConvertKey key with 
         | Some v -> Some (Entered v)
         | None -> None
 
@@ -101,12 +101,12 @@ module Grid =
 module private Duplicates =    
     let private getDupes arr =
         arr
-        |> Array.groupBy(fun (c,_) ->
-            match c with 
-            | Some c -> Some (Cell.GetValue c)
+        |> Array.groupBy(fun (optCell,_) ->
+            match optCell with 
+            | Some cell -> Some (Cell.GetValue cell)
             | None -> None)
-        |> Array.choose(fun(v, arr) ->
-            if arr.Length > 1 && v <> None
+        |> Array.choose(fun(optValue, arr) ->
+            if arr.Length > 1 && optValue <> None
             then 
                 arr
                 |> Array.map(fun (_,idx) -> idx )
@@ -124,21 +124,21 @@ module private Duplicates =
     let private grid (g:Grid) =
         g |> Array2D.toArray |> getDupes 
 
-    let private all dupes b getAll =
-       getAll b
+    let private all dupes board getAll =
+       getAll board
        |> Array.collect dupes
 
-    let private allRows b getAll =
-        all getDupes b getAll
+    let private allRows board getAll =
+        all getDupes board getAll
     
-    let private allColumns b getAll =
-        all getDupes b getAll
+    let private allColumns board getAll =
+        all getDupes board getAll
 
-    let private allGrids b getAll =
-        all grid b getAll
+    let private allGrids board getAll =
+        all grid board getAll
 
-    let GetAll rows cols grids b =
-        [|allRows b rows; allColumns b cols; allGrids b grids|]
+    let GetAll rows cols grids board =
+        [|allRows board rows; allColumns board cols; allGrids board grids|]
         |> Array.concat
         |> Array.distinct
         |> Set.ofArray
@@ -168,27 +168,26 @@ module Board  =
     let GetGrid (board:Board) (row,col) : Grid =
         board.[row..row+2, col..col+2]
 
-    let GetAllGrids b =
+    let GetAllGrids board =
         Grid.AllGrids
-        |> Array.map(GetGrid b)
+        |> Array.map(GetGrid board)
 
-    let GetDupes b =
-        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids b 
+    let GetDupes board =
+        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids board 
         
-    let GetEmpty b =
-        b
-        |> Array2D.map(fun c ->
-            let v,i = c
-            match v with 
-            | None -> Some i
+    let GetEmpty board =
+        board
+        |> Array2D.map(fun (optCell, idx) ->
+            match optCell with 
+            | None -> Some idx
             | Some _ -> None
         )
         |> Array2D.toArray
         |> Array.choose id
         |> Set.ofArray
 
-    let ChangeValue row col value (b:Board) : Board =
-        b 
+    let ChangeValue row col value (board:Board) : Board =
+        board 
         |> Array2D.set row col (value,(row,col))
 
 type GameState =
@@ -261,11 +260,11 @@ module Input =
         else 
             { g with State = Running }
 
-    let private cellChange k g =
-        let r,c = g.Cursor
-        let v = Cell.ConvertKey k 
+    let private cellChange key g =
+        let row,col = g.Cursor
+        let optCell = Cell.ConvertKey key 
         { g with 
-            Board = Board.ChangeValue r c v g.Board
+            Board = Board.ChangeValue row col optCell g.Board
             State = DrawBoard }  
 
     let Check g input  =
@@ -314,5 +313,5 @@ module Input =
         | ConsoleKey.D8 
         | ConsoleKey.NumPad8 
         | ConsoleKey.D9
-        | ConsoleKey.NumPad9 as k -> cellChange k g 
+        | ConsoleKey.NumPad9 as key -> cellChange key g 
         | _ -> g 

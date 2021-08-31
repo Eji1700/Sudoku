@@ -55,15 +55,15 @@ module ConsoleOutput =
             | false, false -> ColorMap.["normal"]()
 
         // Should proably move to cell module and make more generic?
-        let CheckCell i o g = 
-            match o with 
-            | None -> nonGiven i g
+        let CheckCell idx optCell g = 
+            match optCell with 
+            | None -> nonGiven idx g
             | (Some (Given _)) -> givenColor()
-            | _ -> nonGiven i g
+            | _ -> nonGiven idx g
 
-    let private printCell g (o,i) =
-        Color.CheckCell i o g
-        match o with
+    let private printCell g (optCell,idx) =
+        Color.CheckCell idx optCell g
+        match optCell with
         | None -> printf "| "
         | Some c -> printf "|%i" (Cell.ToInt c)
 

@@ -18,20 +18,20 @@ module Initial =
         |> array2D
         |> Board.Create
 
-    // let private fileBoard =
-    //     let sourceDir = __SOURCE_DIRECTORY__
-    //     let data = 
-    //         Directory.GetFiles(sourceDir,"board.txt") 
-    //         |> Array.head
-    //         |> File.ReadLines
+    let private fileBoard =
+        let sourceDir = __SOURCE_DIRECTORY__
+        let data = 
+            Directory.GetFiles(sourceDir,"board.txt") 
+            |> Array.head
+            |> File.ReadLines
 
-    //     data
-    //     |> Seq.map(
-    //         fun line -> line.Split(",")
-    //         >> fun row -> row |> Array.map (int >>Some)
-    //     )
-    //     |> array2D 
-    //     |> Board.Create
+        data
+        |> Seq.map(
+            fun line -> line.Split(",")
+            >> fun row -> row |> Array.map (int >>Some)
+        )
+        |> array2D 
+        |> Board.Create
 
     let Game = 
         {   Board = testBoard 

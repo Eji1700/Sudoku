@@ -55,23 +55,22 @@ module ConsoleOutput =
             | false, false -> ColorMap.["normal"]()
 
         // Should proably move to cell module and make more generic?
-        let CheckCell i o g = 
-            match o with 
-            | None -> nonGiven i g
+        let CheckCell idx optCell g = 
+            match optCell with 
+            | None -> nonGiven idx g
             | (Some (Given _)) -> givenColor()
-            | _ -> nonGiven i g
+            | _ -> nonGiven idx g
 
-    let private printCell g (o,i) =
-        Color.CheckCell i o g
-        match o with
+    let private printCell g optCell idx =
+        Color.CheckCell idx optCell g
+        match optCell with
         | None -> printf "| "
         | Some c -> printf "|%i" (Cell.ToInt c)
 
     let DrawBoard g =
         Console.SetCursorPosition (0,0)
         g.Board
-        |> Array2D.iter(fun c ->
-            let x, y = snd c
+        |> Array2D.iteri(fun x y (cell,_) ->
             match x, y with 
             | 0, 0 -> printfn "___________________"
             
@@ -82,7 +81,7 @@ module ConsoleOutput =
             
             | _ -> ()
 
-            printCell g c
+            printCell g cell (x,y)
 
             if y = 8 then 
                 Color.ColorMap.["normal"]()

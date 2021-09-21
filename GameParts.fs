@@ -4,10 +4,15 @@ open System
 module Array2D = 
     let toArray (arr: 'T [,]) = arr |> Seq.cast<'T> |> Seq.toArray
 
+    let set (x: int) (y: int) (value: 't) (array: 't[,]) : 't[,] =
+        let copy = Array2D.copy array
+        Array2D.set copy x y value
+        copy
+
 type Value = V1 | V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9
 module Value =
-    let ConvertKey k =
-        match k with
+    let ConvertKey key =
+        match key with
         | ConsoleKey.D1
         | ConsoleKey.NumPad1 -> Some V1
         | ConsoleKey.D2
@@ -62,18 +67,18 @@ module Cell =
         Option.bind Value.ConvertInt i  
         |> Option.bind( Given >> Some)
 
-    let GetValue c = 
-        match c with 
-        | Entered v
-        | Given v -> v
+    let GetValue cell = 
+        match cell with 
+        | Entered value
+        | Given value -> value
 
-    let ToInt c =
-        match c with 
-        | Entered v
-        | Given v  -> Value.ToInt v
+    let ToInt cell =
+        match cell with 
+        | Entered value
+        | Given value  -> Value.ToInt value
     
-    let ConvertKey k  =
-        match Value.ConvertKey k with 
+    let ConvertKey key  =
+        match Value.ConvertKey key with 
         | Some v -> Some (Entered v)
         | None -> None
 
@@ -96,12 +101,12 @@ module Grid =
 module private Duplicates =    
     let private getDupes arr =
         arr
-        |> Array.groupBy(fun (c,_) ->
-            match c with 
-            | Some c -> Some (Cell.GetValue c)
+        |> Array.groupBy(fun (optCell,_) ->
+            match optCell with 
+            | Some cell -> Some (Cell.GetValue cell)
             | None -> None)
-        |> Array.choose(fun(v, arr) ->
-            if arr.Length > 1 && v <> None
+        |> Array.choose(fun(optValue, arr) ->
+            if arr.Length > 1 && optValue <> None
             then 
                 arr
                 |> Array.map(fun (_,idx) -> idx )
@@ -119,21 +124,21 @@ module private Duplicates =
     let private grid (g:Grid) =
         g |> Array2D.toArray |> getDupes 
 
-    let private all dupes b getAll =
-       getAll b
+    let private all dupes board getAll =
+       getAll board
        |> Array.collect dupes
 
-    let private allRows b getAll =
-        all getDupes b getAll
+    let private allRows board getAll =
+        all getDupes board getAll
     
-    let private allColumns b getAll =
-        all getDupes b getAll
+    let private allColumns board getAll =
+        all getDupes board getAll
 
-    let private allGrids b getAll =
-        all grid b getAll
+    let private allGrids board getAll =
+        all grid board getAll
 
-    let GetAll rows cols grids b =
-        [|allRows b rows; allColumns b cols; allGrids b grids|]
+    let GetAll rows cols grids board =
+        [|allRows board rows; allColumns board cols; allGrids board grids|]
         |> Array.concat
         |> Array.distinct
         |> Set.ofArray
@@ -163,30 +168,27 @@ module Board  =
     let GetGrid (board:Board) (row,col) : Grid =
         board.[row..row+2, col..col+2]
 
-    let GetAllGrids b =
+    let GetAllGrids board =
         Grid.AllGrids
-        |> Array.map(GetGrid b)
+        |> Array.map(GetGrid board)
 
-    let GetDupes b =
-        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids b 
+    let GetDupes board =
+        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids board 
         
-    let GetEmpty b =
-        b
-        |> Array2D.map(fun c ->
-            let v,i = c
-            match v with 
-            | None -> Some i
+    let GetEmpty board =
+        board
+        |> Array2D.map(fun (optCell, idx) ->
+            match optCell with 
+            | None -> Some idx
             | Some _ -> None
         )
         |> Array2D.toArray
         |> Array.choose id
         |> Set.ofArray
 
-    let ChangeValue row col value (b:Board) =
-        // i hate that this is mutable but i'm too tired to do it immutably.
-        // I'll try later but for now returning a board just to setup the rest
-        b.[row,col] <- (value,(row,col))
-        b
+    let ChangeValue row col value (board:Board) : Board =
+        board 
+        |> Array2D.set row col (value,(row,col))
 
 type GameState =
     | CheckData
@@ -197,6 +199,20 @@ type GameState =
     | Quit
 
 type Cursor = Index
+
+type Direction =
+    | Up
+    | Down
+    | Left
+    | Right
+
+module Direction =
+    let Get d amount = 
+        match d with 
+        | Up ->  (amount * -1, 0)
+        | Down -> (amount, 0)
+        | Left -> (0, amount * -1)
+        | Right -> (0, amount) 
 
 type Game = 
     {   Board: Board
@@ -219,3 +235,83 @@ module Game =
 
     let CheckSolution g =
         Set.isEmpty g.EmptyCells && Set.isEmpty g.DuplicateCells
+
+module Input = 
+    let private boundryCheck x y =
+        x < 9 && 
+        y < 9 &&
+        x > -1 &&
+        y > -1
+
+    let rec moveCell direction amount g =
+        let x, y = g.Cursor
+        let xAdj, yAdj = Direction.Get direction amount
+        let newX = x + xAdj
+        let newY = y + yAdj
+        
+        if boundryCheck newX newY then 
+            match  g.Board.[newX, newY] with  
+            | (Some (Given _)),_ ->
+                moveCell direction (amount + 1) g
+            | _ ->
+                { g with 
+                    Cursor = newX,newY
+                    State = DrawBoard }
+        else 
+            { g with State = Running }
+
+    let private cellChange key g =
+        let row,col = g.Cursor
+        let optCell = Cell.ConvertKey key 
+        { g with 
+            Board = Board.ChangeValue row col optCell g.Board
+            State = DrawBoard }  
+
+    let Check g input  =
+        match input with 
+        | ConsoleKey.Escape -> { g with State = Quit }
+        | ConsoleKey.Spacebar -> { g with State = CheckData }
+        | ConsoleKey.P -> { g with State = GameOver }
+        | ConsoleKey.C -> 
+            {g with
+                DuplicateCells = Set.empty
+                EmptyCells = Set.empty
+                State = DrawBoard}
+
+        | ConsoleKey.K 
+        | ConsoleKey.S
+        | ConsoleKey.DownArrow -> moveCell Down 1 g
+
+        | ConsoleKey.I
+        | ConsoleKey.W
+        | ConsoleKey.UpArrow -> moveCell Up 1 g
+
+        | ConsoleKey.J
+        | ConsoleKey.A
+        | ConsoleKey.LeftArrow -> moveCell Left 1 g
+
+        | ConsoleKey.L
+        | ConsoleKey.D
+        | ConsoleKey.RightArrow -> moveCell Right 1 g
+
+        | ConsoleKey.D0 
+        | ConsoleKey.NumPad0
+        | ConsoleKey.D1 
+        | ConsoleKey.NumPad1 
+        | ConsoleKey.D2  
+        | ConsoleKey.NumPad2  
+        | ConsoleKey.D3   
+        | ConsoleKey.NumPad3   
+        | ConsoleKey.D4  
+        | ConsoleKey.NumPad4  
+        | ConsoleKey.D5   
+        | ConsoleKey.NumPad5   
+        | ConsoleKey.D6  
+        | ConsoleKey.NumPad6  
+        | ConsoleKey.D7  
+        | ConsoleKey.NumPad7  
+        | ConsoleKey.D8 
+        | ConsoleKey.NumPad8 
+        | ConsoleKey.D9
+        | ConsoleKey.NumPad9 as key -> cellChange key g 
+        | _ -> g 

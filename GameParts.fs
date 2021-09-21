@@ -183,9 +183,9 @@ module Board  =
         
     let GetEmpty board =
         board
-        |> Array2D.map(fun (optCell, idx) ->
+        |> Array2D.mapi(fun x y (optCell, _) ->
             match optCell with 
-            | None -> Some idx
+            | None -> Some (x,y)
             | Some _ -> None
         )
         |> Array2D.toArray

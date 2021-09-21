@@ -44,25 +44,18 @@ module ConsoleOutput =
                 "normal", normalColor|]
             |> Map.ofArray
 
-        let private nonGiven i g =
+        let nonGiven i (map:Map<string,unit -> unit>) g =
             let wrong = g.DuplicateCells.Contains i || g.EmptyCells.Contains i 
             let cursor = g.Cursor = i
 
             match cursor,wrong with
-            | false, true -> ColorMap.["wrong"]()
-            | true, true -> ColorMap.["wrongCursor"]()
-            | true, false -> ColorMap.["cursor"]()
-            | false, false -> ColorMap.["normal"]()
-
-        // Should proably move to cell module and make more generic?
-        let CheckCell idx optCell g = 
-            match optCell with 
-            | None -> nonGiven idx g
-            | (Some (Given _)) -> givenColor()
-            | _ -> nonGiven idx g
+            | false, true -> map.["wrong"]()
+            | true, true -> map.["wrongCursor"]()
+            | true, false -> map.["cursor"]()
+            | false, false -> map.["normal"]()
 
     let private printCell g optCell idx =
-        Color.CheckCell idx optCell g
+        Cell.CheckCell idx optCell Color.nonGiven Color.ColorMap g
         match optCell with
         | None -> printf "| "
         | Some c -> printf "|%i" (Cell.ToInt c)

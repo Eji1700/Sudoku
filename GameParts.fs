@@ -82,6 +82,12 @@ module Cell =
         | Some v -> Some (Entered v)
         | None -> None
 
+    let CheckCell idx optCell nonGiven (map:Map<string,unit -> unit>) g = 
+        match optCell with 
+        | None -> nonGiven idx map g
+        | (Some (Given _)) -> map.["given"]()
+        | _ -> nonGiven idx map g
+
 type Index = int * int
 type Row = ((Cell option) * Index)[]        
 type Column = ((Cell option) * Index)[]

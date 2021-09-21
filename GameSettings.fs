@@ -18,6 +18,11 @@ module Initial =
         |> array2D
         |> Board.Create
 
+    testBoard
+    |> Array2D.iteri(fun x y v ->
+        printfn "%A %A %A" x y v
+    )
+
     let private fileBoard =
         let sourceDir = __SOURCE_DIRECTORY__
         let data = 

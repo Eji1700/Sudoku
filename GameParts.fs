@@ -121,13 +121,13 @@ module private Duplicates =
         )
         |> Array.concat
 
-    let private row (r:Row) = 
+    let private rowDupes (r:Row) = 
         getDupes r
 
-    let private column (c:Column) =
+    let private columnDupes (c:Column) =
         getDupes c
 
-    let private grid (g:Grid) =
+    let private gridDupes (g:Grid) =
         g |> Array2D.toArray |> getDupes 
 
     let private all dupes board getAll =
@@ -141,7 +141,7 @@ module private Duplicates =
         all getDupes board getAll
 
     let private allGrids board getAll =
-        all grid board getAll
+        all gridDupes board getAll
 
     let GetAll rows cols grids board =
         [|allRows board rows; allColumns board cols; allGrids board grids|]

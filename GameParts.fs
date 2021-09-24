@@ -115,30 +115,16 @@ module private Duplicates =
         )
         |> Array.concat
 
-    let private row (r:Row) = 
-        getDupes r
-
-    let private column (c:Column) =
-        getDupes c
-
-    let private grid (g:Grid) =
-        g |> Array2D.toArray |> getDupes 
-
-    let private all dupes board getAll =
-       getAll board
-       |> Array.collect dupes
-
-    let private allRows board getAll =
-        all getDupes board getAll
-    
-    let private allColumns board getAll =
-        all getDupes board getAll
+    let private allRowsCols board getAll =
+        getAll board
+       |> Array.collect getDupes
 
     let private allGrids board getAll =
-        all grid board getAll
+        getAll board
+       |> Array.collect ( Array2D.toArray >> getDupes )  
 
     let GetAll rows cols grids board =
-        [|allRows board rows; allColumns board cols; allGrids board grids|]
+        [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
         |> Array.concat
         |> Array.distinct
         |> Set.ofArray

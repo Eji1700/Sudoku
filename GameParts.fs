@@ -185,27 +185,6 @@ module Board  =
         Grid.AllGrids
         |> Array.map(GetGrid board)
 
-    // let private allRowsCols board getAll =
-    //     getAll board
-    //    |> Array.collect getDupes
-
-    // let private allGrids board getAll =
-    //     getAll board
-    //    |> Array.collect ( Array2D.toArray >> getDupes )  
-
-    // let GetAll rows cols grids board =
-    //     [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
-    //     |> Array.concat
-    //     |> Array.distinct
-    //     |> Set.ofArray
-
-
-    // let GetAll rows cols grids board =
-    //     [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
-    //     |> Array.concat
-    //     |> Array.distinct
-    //     |> Set.ofArray
-
     let GetDupes board =
         let rowDupes = 
             GetAllRows board 

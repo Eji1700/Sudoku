@@ -70,7 +70,7 @@ module ConsoleOutput =
     let DrawBoard g =
         Console.SetCursorPosition (0,0)
         g.Board
-        |> Array2D.iteri(fun x y (cell,_) ->
+        |> Array2D.iteri(fun x y cell ->
             match x, y with 
             | 0, 0 -> printfn "___________________"
             

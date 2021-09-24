@@ -82,10 +82,49 @@ module Cell =
         | Some v -> Some (Entered v)
         | None -> None
 
+module private Duplicates =    
+
+    let Identify arr =
+        arr
+        |> Array.groupBy(fun optCell ->
+            match optCell with 
+            | Some cell -> Some (Cell.GetValue cell)
+            | None -> None)
+
+    let GridIdentify arr =
+        arr
+        |> Array.groupBy(fun (optCell,_) ->
+            match optCell with 
+            | Some cell -> Some (Cell.GetValue cell)
+            | None -> None)
+
 type Index = int * int
-type Row = ((Cell option) * Index)[]        
-type Column = ((Cell option) * Index)[]
-type Grid = ((Cell option) * Index)[,]
+type Row = (Cell option)[]   
+module Row =
+    let GetDupes (x:int, row:Row) =
+        Duplicates.Identify row
+        |> Array.choose(fun (optValue, arr) ->
+            if arr.Length > 1 && optValue <> None then 
+                arr
+                |> Array.mapi(fun y _ -> x,y)
+                |> Some
+            else None )
+        |> Array.concat
+
+type Column = (Cell option)[]
+module Column = 
+    let GetDupes (x:int, col:Column) =
+        Duplicates.Identify col
+        |> Array.choose(fun (optValue, arr) ->
+            if arr.Length > 1 && optValue <> None then 
+                arr
+                |> Array.mapi(fun y _ -> x,y)
+                |> Some
+            else None )
+        |> Array.concat
+
+type Grid = (Cell option)[,]
+type IndexedGrid = ((Cell option) * (int * int))[,]
 module Grid =
     let AllGrids =
         [|  0,0
@@ -98,13 +137,10 @@ module Grid =
             6,3
             6,6|]
 
-module private Duplicates =    
-    let private getDupes arr =
-        arr
-        |> Array.groupBy(fun (optCell,_) ->
-            match optCell with 
-            | Some cell -> Some (Cell.GetValue cell)
-            | None -> None)
+    let GetDupes (grid:IndexedGrid) =
+        grid 
+        |> Array2D.toArray
+        |> Duplicates.GridIdentify 
         |> Array.choose(fun(optValue, arr) ->
             if arr.Length > 1 && optValue <> None
             then 
@@ -115,27 +151,18 @@ module private Duplicates =
         )
         |> Array.concat
 
-    let private allRowsCols board getAll =
-        getAll board
-       |> Array.collect getDupes
-
-    let private allGrids board getAll =
-        getAll board
-       |> Array.collect ( Array2D.toArray >> getDupes )  
-
-    let GetAll rows cols grids board =
-        [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
-        |> Array.concat
-        |> Array.distinct
-        |> Set.ofArray
-
-type Board = ((Cell option) * (Index)) [,] 
+type Board = (Cell option) [,] 
+type IndexedBoard = ((Cell option) * (int * int)) [,] 
 module Board  =
     let Create arr : Board =
         arr 
-        |> Array2D.mapi(fun x y i ->
-            (Cell.Create i), (x,y)
-        ) 
+        |> Array2D.map(fun i ->
+            (Cell.Create i) ) 
+
+    let Index (board:Board) : IndexedBoard  =
+        board
+        |> Array2D.mapi(fun x y value ->
+            value, (x, y) )
         
     let GetRow (board:Board) row : Row =
         board.[row, *]
@@ -151,18 +178,56 @@ module Board  =
         [|0..8|]
         |> Array.map(GetColumn board)
 
-    let GetGrid (board:Board) (row,col) : Grid =
+    let GetGrid (board:IndexedBoard) (row,col) : IndexedGrid  =
         board.[row..row+2, col..col+2]
 
     let GetAllGrids board =
         Grid.AllGrids
         |> Array.map(GetGrid board)
 
+    // let private allRowsCols board getAll =
+    //     getAll board
+    //    |> Array.collect getDupes
+
+    // let private allGrids board getAll =
+    //     getAll board
+    //    |> Array.collect ( Array2D.toArray >> getDupes )  
+
+    // let GetAll rows cols grids board =
+    //     [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
+    //     |> Array.concat
+    //     |> Array.distinct
+    //     |> Set.ofArray
+
+
+    // let GetAll rows cols grids board =
+    //     [|allRowsCols board rows; allRowsCols board cols; allGrids board grids|]
+    //     |> Array.concat
+    //     |> Array.distinct
+    //     |> Set.ofArray
+
     let GetDupes board =
-        Duplicates.GetAll GetAllRows GetAllColumns GetAllGrids board 
+        let rowDupes = 
+            GetAllRows board 
+            |> Array.mapi (fun x row -> x, row )
+            |> Array.collect Row.GetDupes 
+           
+        let colDupes = 
+            GetAllColumns board 
+            |> Array.mapi (fun x row -> x, row )
+            |> Array.collect Column.GetDupes 
+
+        let gridDupes =
+            GetAllGrids (Index board)
+            |> Array.collect Grid.GetDupes
+
+        [|rowDupes; colDupes; gridDupes|]
+        |> Array.concat
+        |> Array.distinct
+        |> Set.ofArray
         
     let GetEmpty board =
-        board
+        Index(board)
         |> Array2D.map(fun (optCell, idx) ->
             match optCell with 
             | None -> Some idx
@@ -174,7 +239,7 @@ module Board  =
 
     let ChangeValue row col value (board:Board) : Board =
         board 
-        |> Array2D.set row col (value,(row,col))
+        |> Array2D.set row col value
 
 type GameState =
     | CheckData
@@ -234,10 +299,10 @@ module Input =
         let xAdj, yAdj = Direction.Get direction amount
         let newX = x + xAdj
         let newY = y + yAdj
-        
+
         if boundryCheck newX newY then 
             match  g.Board.[newX, newY] with  
-            | (Some (Given _)),_ ->
+            | (Some (Given _)) ->
                 moveCell direction (amount + 1) g
             | _ ->
                 { g with 

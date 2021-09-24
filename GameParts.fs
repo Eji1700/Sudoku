@@ -99,9 +99,9 @@ module private Duplicates =
             | None -> None)
 
 type Index = int * int
-type Row = (Cell option)[]   
+type Row = Cell option[]  
 module Row =
-    let GetDupes (x:int, row:Row) =
+    let GetDupes (x:int, row:Row)  =
         Duplicates.Identify row
         |> Array.choose(fun (optValue, arr) ->
             if arr.Length > 1 && optValue <> None then 
@@ -111,7 +111,7 @@ module Row =
             else None )
         |> Array.concat
 
-type Column = (Cell option)[]
+type Column = Cell option[]
 module Column = 
     let GetDupes (x:int, col:Column) =
         Duplicates.Identify col
@@ -123,8 +123,8 @@ module Column =
             else None )
         |> Array.concat
 
-type Grid = (Cell option)[,]
-type IndexedGrid = ((Cell option) * (int * int))[,]
+type Grid = Cell option[,]
+type IndexedGrid = ((Cell option) * Index)[,]
 module Grid =
     let AllGrids =
         [|  0,0
@@ -151,8 +151,8 @@ module Grid =
         )
         |> Array.concat
 
-type Board = (Cell option) [,] 
-type IndexedBoard = ((Cell option) * (int * int)) [,] 
+type Board = Cell option [,] 
+type IndexedBoard = ((Cell option) * Index) [,] 
 module Board  =
     let Create arr : Board =
         arr 

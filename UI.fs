@@ -9,7 +9,7 @@ module ConsoleOutput =
 
     let private clearRow pos =
         Console.SetCursorPosition pos
-        printf "                                "
+        printf "                                                            "
         pos
 
     let DisplayMessage s pos =
@@ -73,7 +73,6 @@ module ConsoleOutput =
                 printfn "-------------------"
             
             | _ -> ()
-
             printCell g cell (x,y)
 
             if y = 8 then 
